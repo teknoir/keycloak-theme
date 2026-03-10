@@ -1,0 +1,116 @@
+# charts/stage-7-auth/values.yaml
+# -----------------------------------------------------------------------
+# Values for the stage-7-auth Helm chart.
+# All Keycloak-specific configuration is nested under the "keycloakx" key
+# because this chart depends on the codecentric/keycloakx sub-chart.
+# -----------------------------------------------------------------------
+
+keycloakx:
+  # -----------------------------------------------------------------------
+  # 1. Custom image – uses the Teknoir-themed image built from the
+  #    Dockerfile at the root of this repository.
+  # -----------------------------------------------------------------------
+  image:
+    # Replace <REGISTRY> and <TAG> with your actual container registry path,
+    # e.g. "europe-docker.pkg.dev/my-project/keycloak/teknoir-keycloak"
+    repository: <REGISTRY>/teknoir-keycloak
+    tag: "26.5.3"
+    pullPolicy: IfNotPresent
+
+  # -----------------------------------------------------------------------
+  # 2. Keycloak server arguments
+  #    --optimized is appropriate when the image is pre-built (no re-build
+  #    at container startup).  Remove it if you need the default build step.
+  # -----------------------------------------------------------------------
+  command:
+    - "/opt/keycloak/bin/kc.sh"
+    - "start"
+    - "--optimized"
+
+  # -----------------------------------------------------------------------
+  # 3. Extra environment variables
+  # -----------------------------------------------------------------------
+  extraEnv: |
+    - name: KC_PROXY
+      value: "edge"
+    - name: JAVA_OPTS_APPEND
+      value: "-Djgroups.dns.query={{ include \"keycloakx.fullname\" . }}-headless"
+
+  # -----------------------------------------------------------------------
+  # 4. Realm import – sets loginTheme to "teknoir-theme" on startup.
+  #    The realm JSON is mounted as a ConfigMap and passed to Keycloak via
+  #    the KC_IMPORT environment variable (Keycloak 26 / Quarkus style).
+  #
+  #    Adjust "realm", "displayName", and other fields to match your realm.
+  # -----------------------------------------------------------------------
+  extraEnvFrom: |
+    - secretRef:
+        name: keycloak-admin-credentials
+
+  extraVolumes: |
+    - name: realm-config
+      configMap:
+        name: keycloak-realm-config
+
+  extraVolumeMounts: |
+    - name: realm-config
+      mountPath: /opt/keycloak/data/import
+      readOnly: true
+
+  # Import the realm on every startup (idempotent – Keycloak skips if realm
+  # already exists unless the override strategy is set to OVERWRITE_EXISTING).
+  extraArgs: "--import-realm"
+
+  # -----------------------------------------------------------------------
+  # 5. Service & Ingress / Istio
+  #    Expose Keycloak on port 8080 and let Istio handle TLS termination.
+  # -----------------------------------------------------------------------
+  service:
+    type: ClusterIP
+    httpPort: 80
+    httpNodePort: null
+    httpsPort: 443
+    httpsNodePort: null
+
+  ingress:
+    enabled: false   # Using Istio VirtualService instead.
+
+  # -----------------------------------------------------------------------
+  # 6. Resource limits (adjust to your cluster capacity)
+  # -----------------------------------------------------------------------
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "768Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1536Mi"
+
+  # -----------------------------------------------------------------------
+  # 7. Probes
+  # -----------------------------------------------------------------------
+  livenessProbe: |
+    httpGet:
+      path: /health/live
+      port: 9000
+    initialDelaySeconds: 30
+    periodSeconds: 15
+    failureThreshold: 5
+
+  readinessProbe: |
+    httpGet:
+      path: /health/ready
+      port: 9000
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    failureThreshold: 5
+
+# -----------------------------------------------------------------------
+# Realm ConfigMap – applied separately (e.g., via "kubectl apply" or a
+# companion Helm chart).  Included here for reference.
+#
+# To create it in the cluster:
+#   kubectl create configmap keycloak-realm-config \
+#     --from-file=teknoir-realm.json=charts/stage-7-auth/realm.json \
+#     -n <namespace>
+# -----------------------------------------------------------------------
