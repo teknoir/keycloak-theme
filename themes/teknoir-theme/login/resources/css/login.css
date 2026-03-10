@@ -1,0 +1,339 @@
+/* =========================================================
+   teknoir-theme — login page styles
+   ========================================================= */
+
+/* CSS custom properties */
+:root {
+    --tn-color-bg: #0d0f14;
+    --tn-color-surface: #161b27;
+    --tn-color-surface-elevated: #1e2535;
+    --tn-color-border: #2a3347;
+    --tn-color-primary: #4f8ef7;
+    --tn-color-primary-hover: #3a7ae0;
+    --tn-color-text: #e8ecf4;
+    --tn-color-text-muted: #8a9bbf;
+    --tn-color-error: #e05260;
+    --tn-color-warning: #f0a500;
+    --tn-color-success: #3ecf8e;
+    --tn-color-info: #4f8ef7;
+    --tn-radius: 10px;
+    --tn-radius-sm: 6px;
+    --tn-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    --tn-transition: 0.2s ease;
+}
+
+/* Reset & base */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body.login-pf-page {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+        Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--tn-color-text);
+    background-color: var(--tn-color-bg);
+}
+
+/* ---- Layout wrapper ---- */
+.tn-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px 16px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(79, 142, 247, 0.12) 0%, transparent 70%),
+                var(--tn-color-bg);
+}
+
+/* ---- Card ---- */
+.tn-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--tn-color-surface);
+    border: 1px solid var(--tn-color-border);
+    border-radius: var(--tn-radius);
+    padding: 40px 36px 32px;
+    box-shadow: var(--tn-shadow);
+}
+
+/* ---- Logo / brand ---- */
+.tn-logo {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.tn-logo img {
+    max-height: 52px;
+    max-width: 200px;
+    object-fit: contain;
+}
+
+.tn-logo-text {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: var(--tn-color-text);
+}
+
+/* ---- Alert banners ---- */
+.tn-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: var(--tn-radius-sm);
+    font-size: 13.5px;
+    margin-bottom: 18px;
+}
+
+.tn-alert-error {
+    background: rgba(224, 82, 96, 0.12);
+    border: 1px solid rgba(224, 82, 96, 0.35);
+    color: #f08090;
+}
+
+.tn-alert-warning {
+    background: rgba(240, 165, 0, 0.12);
+    border: 1px solid rgba(240, 165, 0, 0.35);
+    color: #f0c060;
+}
+
+.tn-alert-success {
+    background: rgba(62, 207, 142, 0.12);
+    border: 1px solid rgba(62, 207, 142, 0.35);
+    color: #60d4a4;
+}
+
+.tn-alert-info {
+    background: rgba(79, 142, 247, 0.12);
+    border: 1px solid rgba(79, 142, 247, 0.35);
+    color: #80b0fa;
+}
+
+.tn-alert-icon {
+    flex-shrink: 0;
+    font-style: normal;
+}
+
+/* ---- Form ---- */
+.tn-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.tn-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.tn-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--tn-color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.tn-input {
+    width: 100%;
+    padding: 10px 13px;
+    background: var(--tn-color-surface-elevated);
+    border: 1px solid var(--tn-color-border);
+    border-radius: var(--tn-radius-sm);
+    color: var(--tn-color-text);
+    font-size: 15px;
+    outline: none;
+    transition: border-color var(--tn-transition), box-shadow var(--tn-transition);
+    appearance: none;
+}
+
+.tn-input::placeholder {
+    color: var(--tn-color-text-muted);
+    opacity: 0.7;
+}
+
+.tn-input:focus {
+    border-color: var(--tn-color-primary);
+    box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.18);
+}
+
+.tn-input[aria-invalid="true"] {
+    border-color: var(--tn-color-error);
+}
+
+.tn-field-error {
+    font-size: 12.5px;
+    color: var(--tn-color-error);
+}
+
+/* Password wrapper (room for future show/hide toggle) */
+.tn-password-wrapper {
+    position: relative;
+}
+
+/* ---- Forgot-password link ---- */
+.tn-forgot-link {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--tn-color-primary);
+    text-decoration: none;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.tn-forgot-link:hover {
+    color: var(--tn-color-primary-hover);
+    text-decoration: underline;
+}
+
+/* ---- Remember me ---- */
+.tn-remember-me {
+    flex-direction: row;
+    align-items: center;
+}
+
+.tn-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    color: var(--tn-color-text-muted);
+    cursor: pointer;
+    user-select: none;
+}
+
+.tn-checkbox-label input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--tn-color-primary);
+    cursor: pointer;
+}
+
+/* ---- Submit button ---- */
+.tn-form-actions {
+    margin-top: 4px;
+}
+
+.tn-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 18px;
+    border: none;
+    border-radius: var(--tn-radius-sm);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color var(--tn-transition), opacity var(--tn-transition),
+                box-shadow var(--tn-transition);
+}
+
+.tn-btn-primary {
+    width: 100%;
+    background: var(--tn-color-primary);
+    color: #fff;
+}
+
+.tn-btn-primary:hover:not(:disabled) {
+    background: var(--tn-color-primary-hover);
+    box-shadow: 0 4px 18px rgba(79, 142, 247, 0.35);
+}
+
+.tn-btn-primary:disabled,
+.tn-btn-primary[disabled] {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* ---- Register prompt ---- */
+.tn-register {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 13.5px;
+    color: var(--tn-color-text-muted);
+}
+
+.tn-register-link {
+    color: var(--tn-color-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.tn-register-link:hover {
+    text-decoration: underline;
+}
+
+/* ---- Social identity providers ---- */
+.tn-social {
+    margin-top: 22px;
+}
+
+.tn-social-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    font-size: 12px;
+    color: var(--tn-color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+.tn-social-divider::before,
+.tn-social-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--tn-color-border);
+}
+
+.tn-social-providers {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tn-social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: var(--tn-color-surface-elevated);
+    border: 1px solid var(--tn-color-border);
+    border-radius: var(--tn-radius-sm);
+    color: var(--tn-color-text);
+    font-size: 14px;
+    text-decoration: none;
+    transition: border-color var(--tn-transition), background-color var(--tn-transition);
+}
+
+.tn-social-btn:hover {
+    border-color: var(--tn-color-primary);
+    background: var(--tn-color-surface-elevated);
+}
+
+/* ---- Responsive tweaks ---- */
+@media (max-width: 480px) {
+    .tn-card {
+        padding: 28px 20px 24px;
+    }
+}
