@@ -1,25 +1,83 @@
 /* =========================================================
    teknoir-theme — login page styles
+   Extends the base Keycloak theme with Teknoir branding
    ========================================================= */
 
 /* CSS custom properties */
 :root {
-    --tn-color-bg: #0d0f14;
-    --tn-color-surface: #161b27;
-    --tn-color-surface-elevated: #1e2535;
-    --tn-color-border: #2a3347;
-    --tn-color-primary: #4f8ef7;
-    --tn-color-primary-hover: #3a7ae0;
-    --tn-color-text: #e8ecf4;
-    --tn-color-text-muted: #8a9bbf;
-    --tn-color-error: #e05260;
-    --tn-color-warning: #f0a500;
-    --tn-color-success: #3ecf8e;
-    --tn-color-info: #4f8ef7;
-    --tn-radius: 10px;
-    --tn-radius-sm: 6px;
-    --tn-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    /* Teknoir Brand Colors - from design standard */
+    --tn-color-off-white: #E0DED9;
+    --tn-color-horizon-yellow: #E0AD1B;
+    --tn-color-outrun-orange: #ED6D36;
+    --tn-color-pale-tree-purple: #9B357D;
+    --tn-color-ocean-blue: #3B61BF;
+
+    /* Theme Colors */
+    --tn-color-bg: #101010;
+    --tn-color-surface: #1e1e1e;
+    --tn-color-surface-elevated: #2a2a2a;
+    --tn-color-border: #3a3a3a;
+    --tn-color-primary: #3B61BF;
+    --tn-color-primary-hover: #2f4d99;
+    --tn-color-accent: #ED6D36;
+    --tn-color-text: #E0DED9;
+    --tn-color-text-muted: #898989;
+    --tn-color-error: #ED6D36;
+    --tn-color-warning: #E0AD1B;
+    --tn-color-success: #3B61BF;
+    --tn-color-info: #3B61BF;
+    --tn-radius: 8px;
+    --tn-radius-sm: 4px;
+    --tn-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
     --tn-transition: 0.2s ease;
+}
+
+/* Reset PatternFly and apply Teknoir theme */
+
+/* @font-face declarations for Proxima Nova */
+@font-face {
+    font-family: 'Proxima Nova';
+    src: url('../fonts/ProximaNova-Regular.woff2') format('woff2'),
+         url('../fonts/ProximaNova-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Proxima Nova';
+    src: url('../fonts/ProximaNova-RegularIt.woff2') format('woff2'),
+         url('../fonts/ProximaNova-RegularIt.woff') format('woff');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Proxima Nova';
+    src: url('../fonts/ProximaNova-Medium.woff2') format('woff2'),
+         url('../fonts/ProximaNova-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Proxima Nova';
+    src: url('../fonts/ProximaNova-MediumIt.woff2') format('woff2'),
+         url('../fonts/ProximaNova-MediumIt.woff') format('woff');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Proxima Nova';
+    src: url('../fonts/ProximaNova-SemiboldIt.woff2') format('woff2'),
+         url('../fonts/ProximaNova-SemiboldIt.woff') format('woff');
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
 }
 
 /* Reset & base */
@@ -36,304 +94,276 @@ body {
     height: 100%;
 }
 
+/* Override base body styles */
 body.login-pf-page {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-        Arial, sans-serif;
+    font-family: 'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
     font-size: 15px;
     line-height: 1.6;
-    color: var(--tn-color-text);
-    background-color: var(--tn-color-bg);
+    color: var(--tn-color-text) !important;
+    background: radial-gradient(ellipse at 50% 0%, rgba(59, 97, 191, 0.15) 0%, transparent 70%), var(--tn-color-bg) !important;
 }
 
-/* ---- Layout wrapper ---- */
-.tn-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 24px 16px;
-    background: radial-gradient(ellipse at 50% 0%, rgba(79, 142, 247, 0.12) 0%, transparent 70%),
-                var(--tn-color-bg);
+/* Override login page container */
+.login-pf-page {
+    background: transparent !important;
 }
 
-/* ---- Card ---- */
-.tn-card {
-    width: 100%;
-    max-width: 420px;
-    background: var(--tn-color-surface);
-    border: 1px solid var(--tn-color-border);
-    border-radius: var(--tn-radius);
-    padding: 40px 36px 32px;
-    box-shadow: var(--tn-shadow);
+/* Header / Logo area */
+#kc-header {
+    background: transparent !important;
+    padding: 20px 0 30px;
 }
 
-/* ---- Logo / brand ---- */
-.tn-logo {
+#kc-header-wrapper {
     text-align: center;
-    margin-bottom: 28px;
+    background-image: url('../img/teknoir-logo.svg') !important;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    height: 48px;
+    max-width: 240px;
+    margin: 0 auto;
 }
 
-.tn-logo img {
-    max-height: 52px;
-    max-width: 200px;
-    object-fit: contain;
+/* Hide default Keycloak text if logo is shown */
+.kc-logo-text {
+    display: none;
 }
 
-.tn-logo-text {
+/* Card styling */
+.card-pf {
+    background: var(--tn-color-surface) !important;
+    border: 1px solid var(--tn-color-border) !important;
+    border-radius: var(--tn-radius) !important;
+    box-shadow: var(--tn-shadow) !important;
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 40px 36px 32px !important;
+}
+
+.login-pf-header {
+    margin-bottom: 24px;
+}
+
+#kc-page-title {
+    color: var(--tn-color-text) !important;
     font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    color: var(--tn-color-text);
+    font-weight: 600;
+    text-align: center;
+    margin: 0 0 8px 0;
 }
 
-/* ---- Alert banners ---- */
-.tn-alert {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 10px 14px;
-    border-radius: var(--tn-radius-sm);
-    font-size: 13.5px;
-    margin-bottom: 18px;
+/* Form elements */
+#kc-form,
+#kc-form-login {
+    display: block;
 }
 
-.tn-alert-error {
-    background: rgba(224, 82, 96, 0.12);
-    border: 1px solid rgba(224, 82, 96, 0.35);
-    color: #f08090;
+.form-group {
+    margin-bottom: 20px;
 }
 
-.tn-alert-warning {
-    background: rgba(240, 165, 0, 0.12);
-    border: 1px solid rgba(240, 165, 0, 0.35);
-    color: #f0c060;
-}
-
-.tn-alert-success {
-    background: rgba(62, 207, 142, 0.12);
-    border: 1px solid rgba(62, 207, 142, 0.35);
-    color: #60d4a4;
-}
-
-.tn-alert-info {
-    background: rgba(79, 142, 247, 0.12);
-    border: 1px solid rgba(79, 142, 247, 0.35);
-    color: #80b0fa;
-}
-
-.tn-alert-icon {
-    flex-shrink: 0;
-    font-style: normal;
-}
-
-/* ---- Form ---- */
-.tn-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.tn-form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.tn-label {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+label,
+.control-label {
+    color: var(--tn-color-text-muted) !important;
     font-size: 13px;
     font-weight: 500;
-    color: var(--tn-color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.06em;
+    margin-bottom: 6px;
 }
 
-.tn-input {
-    width: 100%;
-    padding: 10px 13px;
-    background: var(--tn-color-surface-elevated);
-    border: 1px solid var(--tn-color-border);
-    border-radius: var(--tn-radius-sm);
-    color: var(--tn-color-text);
+/* Input fields */
+.form-control,
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    background: var(--tn-color-surface-elevated) !important;
+    border: 1px solid var(--tn-color-border) !important;
+    border-radius: var(--tn-radius-sm) !important;
+    color: var(--tn-color-text) !important;
     font-size: 15px;
-    outline: none;
+    padding: 10px 13px;
     transition: border-color var(--tn-transition), box-shadow var(--tn-transition);
-    appearance: none;
 }
 
-.tn-input::placeholder {
+.form-control:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus {
+    border-color: var(--tn-color-primary) !important;
+    box-shadow: 0 0 0 3px rgba(59, 97, 191, 0.25) !important;
+    outline: none;
+    background: var(--tn-color-surface-elevated) !important;
+}
+
+.form-control::placeholder {
     color: var(--tn-color-text-muted);
     opacity: 0.7;
 }
 
-.tn-input:focus {
-    border-color: var(--tn-color-primary);
-    box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.18);
+/* Error states */
+.has-error .form-control,
+.has-error input {
+    border-color: var(--tn-color-error) !important;
 }
 
-.tn-input[aria-invalid="true"] {
-    border-color: var(--tn-color-error);
-}
-
-.tn-field-error {
+.has-error .help-block {
+    color: var(--tn-color-error) !important;
     font-size: 12.5px;
-    color: var(--tn-color-error);
 }
 
-/* Password wrapper (room for future show/hide toggle) */
-.tn-password-wrapper {
-    position: relative;
+/* Buttons */
+.btn,
+button[type="submit"] {
+    font-family: 'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: var(--tn-radius-sm) !important;
+    padding: 11px 18px;
+    transition: background-color var(--tn-transition), box-shadow var(--tn-transition);
+    border: none !important;
 }
 
-/* ---- Forgot-password link ---- */
-.tn-forgot-link {
-    font-size: 12px;
-    font-weight: 400;
-    color: var(--tn-color-primary);
+.btn-primary,
+button[type="submit"] {
+    background: var(--tn-color-primary) !important;
+    color: #fff !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+button[type="submit"]:hover {
+    background: var(--tn-color-primary-hover) !important;
+    box-shadow: 0 4px 18px rgba(59, 97, 191, 0.4) !important;
+    color: #fff !important;
+}
+
+.btn-primary:active {
+    background: var(--tn-color-primary-hover) !important;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+/* Links */
+a {
+    color: var(--tn-color-primary) !important;
     text-decoration: none;
+    transition: color var(--tn-transition);
+}
+
+a:hover {
+    color: var(--tn-color-primary-hover) !important;
+    text-decoration: underline;
+}
+
+/* Checkbox */
+input[type="checkbox"] {
+    accent-color: var(--tn-color-primary);
+}
+
+.checkbox label {
+    color: var(--tn-color-text-muted) !important;
+    font-size: 13.5px;
+    font-weight: 400;
     text-transform: none;
     letter-spacing: 0;
 }
 
-.tn-forgot-link:hover {
-    color: var(--tn-color-primary-hover);
-    text-decoration: underline;
+/* Alert messages */
+.alert {
+    border-radius: var(--tn-radius-sm) !important;
+    padding: 10px 14px !important;
+    font-size: 13.5px;
+    margin-bottom: 18px;
+    border-width: 1px !important;
 }
 
-/* ---- Remember me ---- */
-.tn-remember-me {
-    flex-direction: row;
-    align-items: center;
+.alert-error {
+    background: rgba(237, 109, 54, 0.15) !important;
+    border-color: rgba(237, 109, 54, 0.4) !important;
+    color: var(--tn-color-error) !important;
 }
 
-.tn-checkbox-label {
+.alert-warning {
+    background: rgba(224, 173, 27, 0.15) !important;
+    border-color: rgba(224, 173, 27, 0.4) !important;
+    color: var(--tn-color-warning) !important;
+}
+
+.alert-success {
+    background: rgba(59, 97, 191, 0.15) !important;
+    border-color: rgba(59, 97, 191, 0.4) !important;
+    color: var(--tn-color-success) !important;
+}
+
+.alert-info {
+    background: rgba(59, 97, 191, 0.15) !important;
+    border-color: rgba(59, 97, 191, 0.4) !important;
+    color: var(--tn-color-info) !important;
+}
+
+/* Social providers */
+#kc-social-providers {
+    margin-top: 22px;
+}
+
+#kc-social-providers ul {
+    padding: 0;
+    list-style: none;
+}
+
+#kc-social-providers li {
+    margin-bottom: 10px;
+}
+
+#kc-social-providers a {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 13.5px;
-    color: var(--tn-color-text-muted);
-    cursor: pointer;
-    user-select: none;
-}
-
-.tn-checkbox-label input[type="checkbox"] {
-    width: 15px;
-    height: 15px;
-    accent-color: var(--tn-color-primary);
-    cursor: pointer;
-}
-
-/* ---- Submit button ---- */
-.tn-form-actions {
-    margin-top: 4px;
-}
-
-.tn-btn {
-    display: inline-flex;
-    align-items: center;
     justify-content: center;
-    padding: 11px 18px;
-    border: none;
-    border-radius: var(--tn-radius-sm);
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color var(--tn-transition), opacity var(--tn-transition),
-                box-shadow var(--tn-transition);
+    padding: 10px 16px;
+    background: var(--tn-color-surface-elevated) !important;
+    border: 1px solid var(--tn-color-border) !important;
+    border-radius: var(--tn-radius-sm) !important;
+    color: var(--tn-color-text) !important;
+    font-size: 14px;
+    text-decoration: none !important;
+    transition: border-color var(--tn-transition), background-color var(--tn-transition);
 }
 
-.tn-btn-primary {
-    width: 100%;
-    background: var(--tn-color-primary);
-    color: #fff;
+#kc-social-providers a:hover {
+    border-color: var(--tn-color-primary) !important;
+    text-decoration: none !important;
 }
 
-.tn-btn-primary:hover:not(:disabled) {
-    background: var(--tn-color-primary-hover);
-    box-shadow: 0 4px 18px rgba(79, 142, 247, 0.35);
-}
-
-.tn-btn-primary:disabled,
-.tn-btn-primary[disabled] {
-    opacity: 0.55;
-    cursor: not-allowed;
-}
-
-/* ---- Register prompt ---- */
-.tn-register {
+/* Registration link */
+#kc-registration {
     margin-top: 22px;
     text-align: center;
     font-size: 13.5px;
     color: var(--tn-color-text-muted);
 }
 
-.tn-register-link {
-    color: var(--tn-color-primary);
-    text-decoration: none;
+#kc-registration a {
     font-weight: 500;
 }
 
-.tn-register-link:hover {
-    text-decoration: underline;
+/* Info area */
+#kc-info {
+    margin-top: 20px;
 }
 
-/* ---- Social identity providers ---- */
-.tn-social {
-    margin-top: 22px;
-}
-
-.tn-social-divider {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
-    font-size: 12px;
+#kc-info-wrapper {
+    font-size: 13.5px;
     color: var(--tn-color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
 }
 
-.tn-social-divider::before,
-.tn-social-divider::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: var(--tn-color-border);
-}
-
-.tn-social-providers {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.tn-social-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 10px 16px;
-    background: var(--tn-color-surface-elevated);
-    border: 1px solid var(--tn-color-border);
-    border-radius: var(--tn-radius-sm);
-    color: var(--tn-color-text);
-    font-size: 14px;
-    text-decoration: none;
-    transition: border-color var(--tn-transition), background-color var(--tn-transition);
-}
-
-.tn-social-btn:hover {
-    border-color: var(--tn-color-primary);
-    background: var(--tn-color-surface-elevated);
-}
-
-/* ---- Responsive tweaks ---- */
+/* Responsive */
 @media (max-width: 480px) {
-    .tn-card {
-        padding: 28px 20px 24px;
+    .card-pf {
+        padding: 28px 20px 24px !important;
+        margin: 0 16px;
     }
 }
