@@ -4,7 +4,7 @@ set -euo pipefail
 # Configuration
 BRANCH_NAME=${BRANCH_NAME:-"local"}
 SHORT_SHA=${SHORT_SHA:-$(date +%Y%m%d-%H%M%S)}
-IMAGE=${IMAGE:-"us-docker.pkg.dev/teknoir/gcr.io/keycloak-themed"}
+IMAGE=${IMAGE:-"ghcr.io/teknoir/keycloak-themed"}
 KEYCLOAK_VERSION=${KEYCLOAK_VERSION:-"26.5.3"}
 PLATFORM=${PLATFORM:-"linux/amd64"}
 PUSH=${PUSH:-"true"}
