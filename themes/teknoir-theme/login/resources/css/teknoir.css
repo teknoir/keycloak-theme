@@ -21,17 +21,6 @@
   --tn-ok:#2BC966; --tn-warn:#F5B02E;
   --tn-font:"Proxima Nova", system-ui, -apple-system, "Segoe UI", sans-serif;
   --tn-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, Consolas, monospace;
-  --tn-horizon: 66vh;
-}
-
-/* Short screens get more room above the horizon; narrow ones more floor. */
-
-@media (max-height: 820px) {
-  :root { --tn-horizon: 74vh; }
-}
-
-@media (max-width: 959px) {
-  :root { --tn-horizon: 80vh; }
 }
 
 @font-face {
@@ -91,6 +80,10 @@ html,
 }
 
 .tn-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
   margin: 0;
   color: var(--tn-bone);
   font-family: var(--tn-font);
@@ -233,14 +226,26 @@ html,
     radial-gradient(50% 45% at 0% 110%, rgba(155, 53, 125, .10), transparent 70%);
 }
 
+/* The floor is in flow, after the shell: it always starts below the content
+   and takes the rest of the viewport on tall screens. It is the query
+   container, so the grid's 3x-perspective and 6x-layer recipe keeps the same
+   ratio at any floor height. (Container units on a container's own properties
+   would resolve against its parent, hence the containment lives here and the
+   units in .tn-grid.) */
+
+.tn-floor {
+  position: relative;
+  z-index: 1;
+  flex: 1 0 auto;
+  min-height: clamp(160px, 26vh, 420px);
+  container-type: size;
+}
+
 .tn-grid {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: var(--tn-horizon);
-  bottom: 0;
+  inset: 0;
   overflow: hidden;
-  perspective: calc((100vh - var(--tn-horizon)) * 3);
+  perspective: 300cqh;
   perspective-origin: 50% 100%;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%);
   mask-image: linear-gradient(to bottom, transparent 0, #000 30%);
@@ -252,7 +257,7 @@ html,
   left: -100%;
   width: 300%;
   bottom: 0;
-  height: 200vh;
+  height: min(200vh, 600cqh);
   transform-origin: 50% 100%;
   transform: rotateX(60deg);
   background-image:
@@ -267,7 +272,7 @@ html,
   position: absolute;
   left: 0;
   right: 0;
-  top: var(--tn-horizon);
+  top: 0;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--tn-neon), transparent);
   box-shadow: 0 0 12px 2px rgba(74, 114, 255, .6);
@@ -286,13 +291,13 @@ html,
    gap - half the sun. It only shows where the two-column layout is wide. */
 
 .tn-sun {
-  --tn-sun: clamp(160px, 13vw, 240px);
+  --tn-sun: clamp(150px, 12vw, 230px);
   display: none;
   position: absolute;
   width: var(--tn-sun);
   height: var(--tn-sun);
-  left: calc(50% + min(680px, 50vw) - 48px - 400px - clamp(48px, 9vw, 200px) / 2 - var(--tn-sun) / 2);
-  top: calc(var(--tn-horizon) - var(--tn-sun) * .9);
+  left: calc(50% + min(680px, 50vw) - 48px - 400px - clamp(64px, 16vw, 280px) / 2 - var(--tn-sun) / 2);
+  top: calc(var(--tn-sun) * -0.9);
   border-radius: 50%;
   background:
     radial-gradient(circle at 32% 24%, rgba(255, 246, 220, .55) 0, rgba(255, 246, 220, 0) 22%),
@@ -320,14 +325,13 @@ html,
 .tn-fleet {
   display: none;
   position: absolute;
-  left: 0;
-  right: 0;
-  top: var(--tn-horizon);
-  bottom: 0;
+  inset: 0;
   margin: 0;
   padding: 0;
   list-style: none;
 }
+
+/* Depth scales the robot glyph only; the label stays legible at every depth. */
 
 .tn-bot {
   position: absolute;
@@ -335,7 +339,7 @@ html,
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  transform: translate(-50%, -100%) scale(var(--s));
+  transform: translate(-50%, -100%);
   transform-origin: 50% 100%;
 }
 
@@ -347,6 +351,7 @@ html,
 .tn-bot-glyph {
   width: 10px;
   height: 10px;
+  transform: scale(var(--s));
 }
 
 .tn-bot--ok .tn-bot-glyph {
@@ -375,7 +380,7 @@ html,
 .tn-bot::after {
   content: "";
   display: block;
-  width: 28px;
+  width: calc(28px * var(--s));
   height: 6px;
   border-radius: 50%;
   background: radial-gradient(closest-side, rgba(74, 114, 255, .55), transparent);
@@ -397,9 +402,12 @@ html,
 .tn-topbar {
   position: relative;
   z-index: 2;
+  flex: none;
   height: 64px;
   display: flex;
   align-items: center;
+  box-sizing: border-box;
+  width: 100%;
   padding: 0 clamp(16px, 4vw, 48px);
   max-width: 1360px;
   margin: 0 auto;
@@ -439,6 +447,8 @@ html,
 .tn-shell {
   position: relative;
   z-index: 1;
+  flex: none;
+  width: 100%;
 }
 
 .tn-body .pf-v5-c-login {
@@ -462,18 +472,17 @@ html,
 .tn-shell--landing {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(340px, 400px);
-  column-gap: clamp(48px, 9vw, 200px);
+  column-gap: 64px;
   align-items: end;
   align-content: end;
   max-width: 1360px;
   margin: 0 auto;
   box-sizing: border-box;
-  min-height: calc(var(--tn-horizon) - 64px);
+  min-height: calc(66vh - 64px);
   padding: 24px clamp(16px, 4vw, 48px) 40px;
 }
 
 .tn-shell:not(.tn-shell--landing) {
-  min-height: calc(100vh - 64px);
   box-sizing: border-box;
   padding: clamp(16px, 6vh, 64px) 16px 32px;
 }
@@ -481,6 +490,22 @@ html,
 .tn-shell:not(.tn-shell--landing) .pf-v5-c-login__main {
   width: min(440px, 100%);
   margin: 0 auto;
+}
+
+/* Tablet: a narrower card leaves the verbs room beside it. The sun is hidden
+   below 1280px, so only the two columns share the width. */
+
+@media (min-width: 960px) and (max-width: 1279px) {
+  .tn-shell--landing {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 360px);
+    column-gap: 48px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .tn-shell--landing {
+    column-gap: clamp(64px, 16vw, 280px);
+  }
 }
 
 /* Card: its height is its content, so the help line is its last row. */
@@ -542,6 +567,14 @@ html,
   margin: 20px 0 0;
   padding-top: 16px;
   border-top: 1px solid var(--tn-rule);
+}
+
+/* PatternFly pads the card's last child. The card already carries its own
+   24px bottom padding, so the help line on the landing page (and the footer
+   on the base pages) must not add another 64px of empty space. */
+
+.tn-body .pf-v5-c-login__main > :last-child {
+  padding-bottom: 0;
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
@@ -635,7 +668,7 @@ html,
    8. Motion: one load sequence, then stillness
    --------------------------------------------------------- */
 
-@keyframes tn-horizon-in {
+@keyframes tn-line-in {
   from { transform: scaleX(0); opacity: 0; }
   to { transform: scaleX(1); opacity: 1; }
 }
@@ -656,7 +689,7 @@ html,
 }
 
 .tn-landing .tn-horizon-line {
-  animation: tn-horizon-in .7s cubic-bezier(.2, .7, .2, 1) both;
+  animation: tn-line-in .7s cubic-bezier(.2, .7, .2, 1) both;
 }
 
 .tn-landing .tn-grid {
@@ -687,7 +720,7 @@ html,
     align-content: start;
     min-height: 0;
     padding-top: 8px;
-    padding-bottom: calc(100vh - var(--tn-horizon) + 24px);
+    padding-bottom: 32px;
     row-gap: 32px;
   }
 

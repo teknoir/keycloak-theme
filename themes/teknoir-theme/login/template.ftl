@@ -143,17 +143,6 @@
 <body id="keycloak-bg" class="${properties.kcBodyClass!} tn-body<#if tnLanding> tn-landing</#if>" data-page-id="login-${pageId}">
 <div class="tn-backdrop" aria-hidden="true">
   <div class="tn-glow"></div>
-  <div class="tn-grid"></div>
-  <div class="tn-horizon-line"></div>
-  <#if tnLanding>
-  <div class="tn-sun"></div>
-  <ul class="tn-fleet" title="${msg("tnFleetLabel")}">
-    <li class="tn-bot tn-bot--ok tn-bot--1"><span class="tn-bot-glyph"></span><span class="tn-bot-name">amr-01</span></li>
-    <li class="tn-bot tn-bot--warn tn-bot--2"><span class="tn-bot-glyph"></span><span class="tn-bot-name">amr-02</span></li>
-    <li class="tn-bot tn-bot--ok tn-bot--3"><span class="tn-bot-glyph"></span><span class="tn-bot-name">amr-03</span></li>
-    <li class="tn-bot tn-bot--ok tn-bot--4"><span class="tn-bot-glyph"></span><span class="tn-bot-name">station-01</span></li>
-  </ul>
-  </#if>
 </div>
 <header id="kc-header" class="pf-v5-c-login__header tn-topbar">
   <div id="kc-header-wrapper" class="pf-v5-c-brand tn-brand">
@@ -309,6 +298,19 @@
       </main>
     </div>
   </div>
+</div>
+<div class="tn-floor" aria-hidden="true">
+  <div class="tn-grid"></div>
+  <div class="tn-horizon-line"></div>
+  <#if tnLanding>
+  <div class="tn-sun"></div>
+  <ul class="tn-fleet" title="${msg("tnFleetLabel")}">
+    <li class="tn-bot tn-bot--ok tn-bot--1"><span class="tn-bot-glyph"></span><span class="tn-bot-name">amr-01</span></li>
+    <li class="tn-bot tn-bot--warn tn-bot--2"><span class="tn-bot-glyph"></span><span class="tn-bot-name">amr-02</span></li>
+    <li class="tn-bot tn-bot--ok tn-bot--3"><span class="tn-bot-glyph"></span><span class="tn-bot-name">amr-03</span></li>
+    <li class="tn-bot tn-bot--ok tn-bot--4"><span class="tn-bot-glyph"></span><span class="tn-bot-name">station-01</span></li>
+  </ul>
+  </#if>
 </div>
 </body>
 </html>
