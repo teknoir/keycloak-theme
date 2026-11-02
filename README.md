@@ -14,14 +14,15 @@ keycloak-theme/
 ├── themes/
 │   └── teknoir-theme/
 │       └── login/
-│           ├── theme.properties        # Theme configuration
-│           ├── login.ftl               # Login page template
+│           ├── theme.properties        # Theme configuration (parent=keycloak.v2)
+│           ├── template.ftl            # Landing shell + sign-in card
+│           ├── messages/
+│           │   └── messages_en.properties  # Landing copy and login strings
 │           └── resources/
 │               ├── css/
-│               │   └── login.css       # Teknoir-branded styles
+│               │   └── teknoir.css     # Teknoir-branded styles
 │               ├── fonts/              # Proxima Nova font files
 │               └── img/                # Teknoir logo and favicons
-├── resources/                          # Source assets (fonts, logos, icons)
 └── example-realm.json                  # Example realm configuration with theme
 ```
 
@@ -65,6 +66,26 @@ docker build \
 # Push to registry
 docker push <REGISTRY>/keycloak-themed:latest
 ```
+
+---
+
+## Preview locally
+
+Run Keycloak with the theme directory mounted and template/theme caching off, so
+edits to `template.ftl`, the messages and the CSS show up on reload:
+
+```bash
+docker run --rm -p 8080:8080 \
+  -v "$PWD/themes/teknoir-theme:/opt/keycloak/themes/teknoir-theme:ro" \
+  quay.io/keycloak/keycloak:26.5.3 \
+  start-dev --spi-theme--cache-themes=false --spi-theme--cache-templates=false
+```
+
+Open the admin console at http://localhost:8080, create a realm with
+`loginTheme=teknoir-theme` (or import `example-realm.json`), and open a client
+login or the account console in that realm to see the landing page. The
+`master` realm's admin-console client deliberately gets the plain centered
+sign-in card instead of the landing page.
 
 ---
 
@@ -245,15 +266,29 @@ The theme implements the Teknoir design standard with:
   - Horizon Yellow: `#E0AD1B` (warnings)
   - Pale Tree Purple: `#9B357D`
 - **Logo**: Teknoir full logo with trademark
-- **Dark Theme**: Modern dark background with proper contrast
+- **Dark Theme**: True-black instrument-panel surface, neon horizon and the
+  brand's four chevron colors; dark only, regardless of the OS setting
+- **No external assets**: fonts, logo and styles all ship under
+  `login/resources/`, so the theme works on air-gapped installs
+
+### Layout
+
+`template.ftl` is the landing shell. It renders a story column ("Manage",
+"Access", "Develop") beside the sign-in card on the `login` and
+`login-username` pages, so signing in never needs an extra click. The
+`security-admin-console` client is excluded, and every other page (password,
+OTP, reset password, error, info, page expired, logout confirm, device code,
+registration, ...) gets the same branded centered card. All landing copy lives in
+`messages/messages_en.properties`.
 
 ### File Structure
 
 | File | Purpose |
 |---|---|
-| `theme.properties` | Theme configuration extending base Keycloak theme |
-| `login.ftl` | Login page template with Teknoir branding |
-| `login.css` | Complete theme styles with CSS custom properties |
+| `theme.properties` | Theme configuration: `parent=keycloak.v2`, dark palette, styles |
+| `template.ftl` | Landing shell (story column + sign-in card) and card layout for every page |
+| `messages/messages_en.properties` | All landing copy and login strings |
+| `resources/css/teknoir.css` | Complete theme styles: tokens, PatternFly remap, backdrop, layout |
 | `resources/fonts/` | Proxima Nova font files (woff, woff2) |
 | `resources/img/` | Teknoir logo (SVG) and favicon files |
 
