@@ -273,20 +273,23 @@ The theme implements the Teknoir design standard with:
 
 ### Layout
 
-`template.ftl` is the landing shell. It renders a story column ("Manage",
-"Access", "Develop") beside the sign-in card on the `login` and
-`login-username` pages, so signing in never needs an extra click. The
-`security-admin-console` client is excluded, and every other page (password,
-OTP, reset password, error, info, page expired, logout confirm, device code,
-registration, ...) gets the same branded centered card. All landing copy lives in
-`messages/messages_en.properties`.
+`template.ftl` is the landing shell: the console above the horizon, the fleet
+below it. Headline, lede and the three verbs share one baseline with the
+sign-in card, the sun rests on the horizon in the gap between them, and four
+sample robots stand on the neon floor as status glyphs (green online, amber
+degraded). One load sequence brings the horizon, floor, sun and robots in;
+after that the page is still. Proxima Nova carries every word except the one
+command snippet. The `security-admin-console` client is excluded, and every
+other page (password, OTP, reset password, error, info, page expired, logout
+confirm, device code, registration, ...) gets the same branded centered card.
+All landing copy lives in `messages/messages_en.properties`.
 
 ### File Structure
 
 | File | Purpose |
 |---|---|
 | `theme.properties` | Theme configuration: `parent=keycloak.v2`, dark palette, styles |
-| `template.ftl` | Landing shell (story column + sign-in card) and card layout for every page |
+| `template.ftl` | Landing shell (console + card above the horizon, fleet below) and card layout for every page |
 | `messages/messages_en.properties` | All landing copy and login strings |
 | `resources/css/teknoir.css` | Complete theme styles: tokens, PatternFly remap, backdrop, layout |
 | `resources/fonts/` | Proxima Nova font files (woff, woff2) |

@@ -145,7 +145,15 @@
   <div class="tn-glow"></div>
   <div class="tn-grid"></div>
   <div class="tn-horizon-line"></div>
-  <#if tnLanding><div class="tn-sun"></div></#if>
+  <#if tnLanding>
+  <div class="tn-sun"></div>
+  <ul class="tn-fleet" title="${msg("tnFleetLabel")}">
+    <li class="tn-bot tn-bot--ok tn-bot--1"><span class="tn-bot-glyph"></span><span class="tn-bot-name">amr-01</span></li>
+    <li class="tn-bot tn-bot--warn tn-bot--2"><span class="tn-bot-glyph"></span><span class="tn-bot-name">amr-02</span></li>
+    <li class="tn-bot tn-bot--ok tn-bot--3"><span class="tn-bot-glyph"></span><span class="tn-bot-name">amr-03</span></li>
+    <li class="tn-bot tn-bot--ok tn-bot--4"><span class="tn-bot-glyph"></span><span class="tn-bot-name">station-01</span></li>
+  </ul>
+  </#if>
 </div>
 <header id="kc-header" class="pf-v5-c-login__header tn-topbar">
   <div id="kc-header-wrapper" class="pf-v5-c-brand tn-brand">
@@ -155,34 +163,22 @@
 <div class="tn-shell<#if tnLanding> tn-shell--landing</#if>">
   <#if tnLanding>
   <section class="tn-story" aria-labelledby="tn-headline">
-    <p class="tn-eyebrow tn-mono">${msg("tnEyebrow")}</p>
-    <h1 id="tn-headline" class="tn-headline">${msg("tnHeadline1")}<br><span class="tn-headline-2">${msg("tnHeadline2")}</span></h1>
+    <h1 id="tn-headline" class="tn-headline">${msg("tnHeadline1")}<br>${msg("tnHeadline2")}</h1>
     <p class="tn-lede">${msg("tnLede")}</p>
-    <ul class="tn-pillars">
-      <li class="tn-pillar tn-pillar--manage">
-        <span class="tn-pillar-mark" aria-hidden="true"></span>
-        <h2 class="tn-pillar-kicker tn-mono">${msg("tnManageKicker")}</h2>
-        <p class="tn-pillar-text">${msg("tnManageText")}</p>
-        <code class="tn-proof tn-mono">${msg("tnManageProof")}</code>
-      </li>
-      <li class="tn-pillar tn-pillar--access">
-        <span class="tn-pillar-mark" aria-hidden="true"></span>
-        <h2 class="tn-pillar-kicker tn-mono">${msg("tnAccessKicker")}</h2>
-        <p class="tn-pillar-text">${msg("tnAccessText")}</p>
-        <code class="tn-proof tn-proof--cli tn-mono">${msg("tnAccessProof")}</code>
-      </li>
-      <li class="tn-pillar tn-pillar--develop">
-        <span class="tn-pillar-mark" aria-hidden="true"></span>
-        <h2 class="tn-pillar-kicker tn-mono">${msg("tnDevelopKicker")}</h2>
-        <p class="tn-pillar-text">${msg("tnDevelopText")}</p>
-        <code class="tn-proof tn-mono">${msg("tnDevelopProof")}</code>
-      </li>
-    </ul>
-    <ol class="tn-steps" aria-label="${msg("tnStepsLabel")}">
-      <li class="tn-step"><span class="tn-step-num tn-mono" aria-hidden="true">01</span><span class="tn-step-text">${msg("tnStep1")}</span></li>
-      <li class="tn-step"><span class="tn-step-num tn-mono" aria-hidden="true">02</span><span class="tn-step-text">${msg("tnStep2")}</span></li>
-      <li class="tn-step"><span class="tn-step-num tn-mono" aria-hidden="true">03</span><span class="tn-step-text">${msg("tnStep3")}</span></li>
-    </ol>
+    <dl class="tn-verbs">
+      <div class="tn-verb tn-verb--manage">
+        <dt class="tn-verb-name"><span class="tn-verb-mark" aria-hidden="true"></span>${msg("tnManageKicker")}</dt>
+        <dd class="tn-verb-text">${msg("tnManageText")}</dd>
+      </div>
+      <div class="tn-verb tn-verb--access">
+        <dt class="tn-verb-name"><span class="tn-verb-mark" aria-hidden="true"></span>${msg("tnAccessKicker")}</dt>
+        <dd class="tn-verb-text">${msg("tnAccessText")} <code class="tn-cmd">${msg("tnAccessProof")}</code></dd>
+      </div>
+      <div class="tn-verb tn-verb--develop">
+        <dt class="tn-verb-name"><span class="tn-verb-mark" aria-hidden="true"></span>${msg("tnDevelopKicker")}</dt>
+        <dd class="tn-verb-text">${msg("tnDevelopText")}</dd>
+      </div>
+    </dl>
   </section>
   </#if>
   <div class="${properties.kcLogin!}">
