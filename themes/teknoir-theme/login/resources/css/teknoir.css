@@ -96,9 +96,10 @@ html,
   outline-offset: 2px;
 }
 
-/* Inputs inside a form control show focus on the control border instead. */
+/* Inputs inside a form control show focus on the control border instead.
+   Transparent rather than none, so forced-colors mode still draws a ring. */
 .tn-body .pf-v5-c-form-control input:focus-visible {
-  outline: none;
+  outline: 2px solid transparent;
 }
 
 /* ---------------------------------------------------------
@@ -115,6 +116,7 @@ html,
   --pf-v5-global--FontFamily--heading: var(--tn-font);
   --pf-v5-global--Color--100: var(--tn-bone);
   --pf-v5-global--Color--200: var(--tn-ash);
+  --pf-v5-global--FontWeight--bold: 500;
 }
 
 .tn-body .pf-v5-c-button {
@@ -123,11 +125,28 @@ html,
   --pf-v5-c-button--m-primary--focus--BackgroundColor: var(--tn-accent-hover);
   --pf-v5-c-button--m-primary--Color: #fff;
   --pf-v5-c-button--BorderRadius: 6px;
+  --pf-v5-c-button--m-secondary--Color: var(--tn-accent-ink);
+  --pf-v5-c-button--m-secondary--hover--Color: #B3C4F7;
+  --pf-v5-c-button--m-secondary--focus--Color: #B3C4F7;
+  --pf-v5-c-button--m-secondary--active--Color: #B3C4F7;
+  --pf-v5-c-button--m-secondary--after--BorderColor: var(--tn-accent-ink);
 }
 
 .tn-body .pf-v5-c-button.pf-m-primary {
   min-height: 40px;
   font-weight: 500;
+}
+
+/* Tile titles and icons take their colour from primary-color--100, which is
+   the dark action blue here; use the lighter accent ink instead. */
+
+.tn-body .pf-v5-c-tile {
+  --pf-v5-c-tile--hover__title--Color: var(--tn-accent-ink);
+  --pf-v5-c-tile--focus__title--Color: var(--tn-accent-ink);
+  --pf-v5-c-tile--m-selected__title--Color: var(--tn-accent-ink);
+  --pf-v5-c-tile--hover__icon--Color: var(--tn-accent-ink);
+  --pf-v5-c-tile--focus__icon--Color: var(--tn-accent-ink);
+  --pf-v5-c-tile--m-selected__icon--Color: var(--tn-accent-ink);
 }
 
 .tn-body .pf-v5-c-form-control {
@@ -145,7 +164,17 @@ html,
   border-radius: 6px;
 }
 
-.tn-body .pf-v5-c-form-control:not(.pf-m-error):focus-within::before {
+/* The password eye button is the end of one pill: square the inner corners of
+   the input so the two controls meet without a seam. */
+
+.tn-body .pf-v5-c-input-group__item.pf-m-fill > .pf-v5-c-form-control,
+.tn-body .pf-v5-c-input-group__item.pf-m-fill > .pf-v5-c-form-control::before,
+.tn-body .pf-v5-c-input-group__item.pf-m-fill > .pf-v5-c-form-control::after {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.tn-body .pf-v5-c-form-control:focus-within::before {
   border-color: var(--tn-focus);
 }
 
@@ -159,13 +188,40 @@ html,
 }
 
 .tn-body .pf-v5-c-button.pf-m-control::after {
-  border-color: var(--tn-rule-2);
-  border-radius: 0 6px 6px 0;
+  border-color: var(--tn-rule-2) var(--tn-rule-2) var(--pf-v5-global--BorderColor--200);
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+  border-start-end-radius: 6px;
+  border-end-end-radius: 6px;
 }
 
 .tn-body .pf-v5-c-form__label-text {
   color: var(--tn-ash);
   font-size: 13px;
+}
+
+/* The remember/reset row must wrap as one line of chips, not four lines. */
+
+.tn-body .pf-v5-c-input-group + .pf-v5-c-form__helper-text > .pf-v5-c-helper-text {
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 12px;
+}
+
+.tn-body .pf-v5-c-check__label {
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.tn-body .pf-v5-c-helper-text__item a {
+  white-space: nowrap;
+}
+
+/* The theme is dark whatever the OS setting, but v2 picks the social-provider
+   icon filter from prefers-color-scheme: apply the dark-mode filter always. */
+
+.tn-body #kc-social-providers svg:not(.google) {
+  filter: invert(54%) sepia(96%) saturate(2028%) hue-rotate(174deg) brightness(99%) contrast(97%);
 }
 
 /* ---------------------------------------------------------
@@ -206,6 +262,31 @@ html,
   color: var(--tn-accent-ink);
 }
 
+/* Base-page spacing: the device-code label, the logout instruction and the
+   footer band follow the same rhythm as the v2 form. */
+
+.tn-body #kc-user-verify-device-user-code-form .pf-v5-c-form__label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--tn-ash);
+}
+
+.tn-body #kc-logout-confirm .instruction {
+  margin: 0 0 16px;
+}
+
+.tn-body .pf-v5-c-login__main-footer-band {
+  --pf-v5-c-login__main-footer-band--BorderTopColor: var(--tn-rule);
+  --pf-v5-c-login__main-footer-band--PaddingTop: 16px;
+  --pf-v5-c-login__main-footer-band--PaddingRight: 0;
+  --pf-v5-c-login__main-footer-band--PaddingLeft: 0;
+  --pf-v5-c-login__main-footer-band-item--PaddingTop: 0;
+  text-align: left;
+  font-size: 13px;
+  color: var(--tn-ash);
+}
+
 /* ---------------------------------------------------------
    5. Backdrop
    --------------------------------------------------------- */
@@ -239,6 +320,16 @@ html,
   flex: 1 0 auto;
   min-height: clamp(160px, 26vh, 420px);
   container-type: size;
+  pointer-events: none;
+}
+
+/* The floor only has to be deep enough for the robots; below that it should
+   not push the page past the viewport on a laptop. */
+
+@media (min-width: 960px) {
+  .tn-floor {
+    min-height: clamp(140px, 20vh, 420px);
+  }
 }
 
 .tn-grid {
@@ -257,7 +348,7 @@ html,
   left: -100%;
   width: 300%;
   bottom: 0;
-  height: min(200vh, 600cqh);
+  height: 600cqh;
   transform-origin: 50% 100%;
   transform: rotateX(60deg);
   background-image:
@@ -343,9 +434,9 @@ html,
   transform-origin: 50% 100%;
 }
 
-.tn-bot--1 { left: 14%; top: 34%; --s: 1; }
+.tn-bot--1 { left: 14%; top: max(34%, 76px); --s: 1; }
 .tn-bot--2 { left: 33%; top: 70%; --s: 1.25; }
-.tn-bot--3 { left: 46%; top: 22%; --s: .85; }
+.tn-bot--3 { left: 46%; top: max(22%, 60px); --s: .85; }
 .tn-bot--4 { left: 86%; top: 56%; --s: 1.12; }
 
 .tn-bot-glyph {
@@ -369,6 +460,7 @@ html,
 }
 
 .tn-bot-name {
+  order: -1;
   font-family: var(--tn-mono);
   font-size: 11px;
   color: var(--tn-ash);
@@ -433,7 +525,7 @@ html,
   font-size: inherit;
   text-transform: none;
   letter-spacing: 0;
-  text-align: left;
+  text-align: start;
   line-height: 0;
   padding: 0;
 }
@@ -513,6 +605,7 @@ html,
 .tn-body .pf-v5-c-login__main {
   position: relative;
   width: 100%;
+  margin: 0;
   background: rgba(18, 20, 24, .82);
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
@@ -527,20 +620,30 @@ html,
 .tn-body .pf-v5-c-login__main::before {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
+  left: -1px;
+  right: -1px;
   top: -1px;
-  height: 1px;
+  height: 8px;
   border-radius: 8px 8px 0 0;
+  pointer-events: none;
   background: linear-gradient(90deg,
     var(--tn-yellow) 0 25%,
     var(--tn-orange) 25% 50%,
     var(--tn-purple) 50% 75%,
-    var(--tn-blue) 75% 100%);
+    var(--tn-blue) 75% 100%) top / 100% 2px no-repeat;
 }
 
-.tn-body .pf-v5-c-login__main-header,
-.tn-body .pf-v5-c-login__main-body,
+.tn-body .pf-v5-c-login__main-header {
+  padding: 0;
+  background: none;
+  border: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: 16px;
+}
+
+.tn-body .pf-v5-c-login__main > .pf-v5-c-login__main-body,
 .tn-body .pf-v5-c-login__main-footer {
   padding: 0;
   background: none;
@@ -548,7 +651,7 @@ html,
   display: block;
 }
 
-.tn-body .pf-v5-c-login__main-body {
+.tn-body .pf-v5-c-login__main > .pf-v5-c-login__main-body {
   margin-top: 16px;
 }
 
@@ -603,6 +706,7 @@ html,
   color: var(--tn-ash);
   max-width: 44ch;
   margin: 20px 0 0;
+  text-wrap: balance;
 }
 
 .tn-verbs {
@@ -610,6 +714,15 @@ html,
   padding: 0;
   max-width: 620px;
   border-top: 1px solid var(--tn-rule);
+}
+
+/* The story column is already narrow here; the cap only breaks the sun's
+   centring between the verbs and the card. */
+
+@media (min-width: 1280px) {
+  .tn-verbs {
+    max-width: none;
+  }
 }
 
 .tn-verb {
@@ -648,6 +761,11 @@ html,
   margin: 0;
 }
 
+.tn-verb-text,
+.tn-card-help {
+  text-wrap: pretty;
+}
+
 .tn-cmd {
   font-family: var(--tn-mono);
   font-size: 13px;
@@ -660,8 +778,41 @@ html,
 }
 
 .tn-cmd::before {
-  content: "$ ";
+  content: "$ " / "";
   color: var(--tn-ash);
+}
+
+/* Very large screens: let the composition fill the extra width. */
+
+@media (min-width: 2200px) and (min-height: 1200px) {
+  .tn-topbar,
+  .tn-body .pf-v5-c-login__header.tn-topbar,
+  .tn-shell--landing {
+    max-width: 1760px;
+  }
+
+  .tn-shell--landing {
+    grid-template-columns: minmax(0, 1fr) 440px;
+  }
+
+  .tn-headline {
+    font-size: 120px;
+  }
+
+  .tn-lede {
+    font-size: 22px;
+    max-width: 34em;
+  }
+
+  .tn-verb-name,
+  .tn-verb-text {
+    font-size: 17px;
+  }
+
+  .tn-sun {
+    --tn-sun: 232px;
+    left: calc(50% + 880px - 48px - 440px - clamp(64px, 16vw, 280px) / 2 - var(--tn-sun) / 2);
+  }
 }
 
 /* ---------------------------------------------------------
@@ -739,6 +890,24 @@ html,
 @media (max-width: 479px) {
   .tn-body .pf-v5-c-login__main {
     padding: 24px;
+  }
+}
+
+/* Touch: the same controls, at the 44px target PatternFly uses. */
+
+@media (pointer: coarse) {
+  .tn-body .pf-v5-c-form-control,
+  .tn-body .pf-v5-c-button.pf-m-primary,
+  .tn-body .pf-v5-c-button.pf-m-control,
+  .tn-body input[type=submit].pf-v5-c-button {
+    min-height: 44px;
+  }
+
+  .tn-body .pf-v5-c-helper-text__item a,
+  .tn-body .pf-v5-c-check__label {
+    display: inline-block;
+    padding-block: 12px;
+    margin-block: -12px;
   }
 }
 

@@ -26,6 +26,7 @@
 <#local tnClientId = (client.clientId)!"">
 <#local tnPage = (pageId)!"">
 <#local tnLanding = (tnPage == "login" || tnPage == "login-username") && tnClientId != "security-admin-console">
+<#local tnTitles = {"login-reset-password": "emailForgotTitle", "login-config-totp": "loginTotpTitle", "login-update-password": "updatePasswordTitle", "logout-confirm": "logoutConfirmTitle", "error": "errorTitle", "login-oauth2-device-verify-user-code": "oauth2DeviceVerificationTitle"}>
 <!DOCTYPE html>
 <html class="${properties.kcHtmlClass!}" lang="${lang}"<#if realm.internationalizationEnabled> dir="${(locale.rtl)?then('rtl','ltr')}"</#if>>
 
@@ -41,7 +42,7 @@
             <meta name="${meta?split('==')[0]}" content="${meta?split('==')[1]}"/>
         </#list>
     </#if>
-    <title>${msg("loginTitle",(realm.displayName!''))}</title>
+    <title><#if tnTitles[tnPage]??>${msg(tnTitles[tnPage])} ${msg("tnTitleSuffix")}<#else>${msg("loginTitle",(realm.displayName!''))}</#if></title>
     <link rel="icon" href="${url.resourcesPath}/img/favicon.ico" />
     <link rel="apple-touch-icon" href="${url.resourcesPath}/img/apple-touch-icon.png">
     <#if properties.stylesCommon?has_content>
@@ -292,7 +293,7 @@
           <div class="${properties.kcLoginMainFooter!}">
               <@loginFooter.content/>
           </div>
-          <#if tnLanding>
+          <#if tnLanding && !(realm.registrationAllowed!false)>
           <p class="tn-card-help">${msg("tnNoAccount")}</p>
           </#if>
       </main>
@@ -304,7 +305,7 @@
   <div class="tn-horizon-line"></div>
   <#if tnLanding>
   <div class="tn-sun"></div>
-  <ul class="tn-fleet" title="${msg("tnFleetLabel")}">
+  <ul class="tn-fleet">
     <li class="tn-bot tn-bot--ok tn-bot--1"><span class="tn-bot-glyph"></span><span class="tn-bot-name">amr-01</span></li>
     <li class="tn-bot tn-bot--warn tn-bot--2"><span class="tn-bot-glyph"></span><span class="tn-bot-name">amr-02</span></li>
     <li class="tn-bot tn-bot--ok tn-bot--3"><span class="tn-bot-glyph"></span><span class="tn-bot-name">amr-03</span></li>

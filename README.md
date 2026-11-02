@@ -76,15 +76,17 @@ edits to `template.ftl`, the messages and the CSS show up on reload:
 
 ```bash
 docker run --rm -p 8080:8080 \
+  -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin \
   -v "$PWD/themes/teknoir-theme:/opt/keycloak/themes/teknoir-theme:ro" \
   quay.io/keycloak/keycloak:26.5.3 \
-  start-dev --spi-theme--cache-themes=false --spi-theme--cache-templates=false
+  start-dev --spi-theme--cache-themes=false --spi-theme--cache-templates=false --spi-theme--static-max-age=-1
 ```
 
 Open the admin console at http://localhost:8080, create a realm with
 `loginTheme=teknoir-theme` (or import `example-realm.json`), and open a client
-login or the account console in that realm to see the landing page. The
-`master` realm's admin-console client deliberately gets the plain centered
+login or the account console in that realm to see the landing page. The admin
+console's client (`security-admin-console`, in any realm that uses this theme;
+on the platform that is the master realm) deliberately gets the plain centered
 sign-in card instead of the landing page.
 
 ---
@@ -278,8 +280,9 @@ below it. Headline, lede and the three verbs share one baseline with the
 sign-in card, the sun rests on the horizon in the gap between them, and four
 sample robots stand on the neon floor as status glyphs (green online, amber
 degraded). One load sequence brings the horizon, floor, sun and robots in;
-after that the page is still. Proxima Nova carries every word except the one
-command snippet. The `security-admin-console` client is excluded, and every
+after that the page is still. Proxima Nova carries every word except the
+command snippet and the robot labels, which use the system monospace stack.
+The `security-admin-console` client is excluded, and every
 other page (password, OTP, reset password, error, info, page expired, logout
 confirm, device code, registration, ...) gets the same branded centered card.
 All landing copy lives in `messages/messages_en.properties`.
