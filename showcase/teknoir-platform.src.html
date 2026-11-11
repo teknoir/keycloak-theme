@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teknoir: any robot, any workload, any way you work</title>
+<meta name="description" content="Teknoir is the edge and robot fleet platform you run from the console, hand to an always-on TeknoirBot, or drive from your terminal and coding agent with tnctl and MCP. One fleet, one identity, one set of rights.">
+<meta name="theme-color" content="#101010">
+<!--@@FAVICON@@-->
+<style>
+/*@@FONTS@@*/
+:root{--r1:4px;--r2:6px;--r3:10px;--r4:14px;--ln3:#1c1c1c;--bg:#101010;--s1:#1e1e1e;--s2:#2a2a2a;--bd:#3a3a3a;--bd2:#6a6a6a;--tx:#E0DED9;--tx2:#bebcb7;--tx3:#a3a3a3;--tx4:#8f8f8f;--mu:#979797;--ln:#262626;--ln2:#232323;--blue:#3B61BF;--blt:#8DA6E8;--org:#ED6D36;--ort:#f3a37f;--yel:#E0AD1B;--pur:#9B357D;--put:#D08BC0;--ok:#4FB07A;--okt:#8fd6ac;--bad:#E5534B;--badt:#F59A93;--mono:ui-monospace,'SFMono-Regular','JetBrains Mono','DejaVu Sans Mono',Menlo,Consolas,monospace}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 17px/1.55 'Proxima Nova',system-ui,-apple-system,'Segoe UI',sans-serif;font-synthesis:none;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden}
+h1,h2,h3,b,strong{font-weight:500}
+em{font-style:normal}
+a{color:inherit}
+a:focus-visible{outline:2px solid var(--blt);outline-offset:3px}
+code,pre,kbd{font-family:var(--mono)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+.nw{white-space:nowrap}
+.defs{position:absolute;width:0;height:0;overflow:hidden}
+.skip{position:absolute;left:16px;top:-64px;z-index:10;background:var(--tx);color:#111;padding:8px 14px;border-radius:var(--r2);text-decoration:none;font-weight:500}
+.skip:focus{top:12px}
+
+/* header */
+.top{position:relative;z-index:3}
+.top .wrap{display:flex;align-items:center;gap:28px;height:80px}
+.top .wrap>a:first-child{display:block;border-radius:var(--r2)}
+.top .tn-logo{width:184px;height:auto;display:block}
+.nav{display:flex;gap:28px;margin-left:auto;font-size:15px}
+.nav a{color:var(--tx2);text-decoration:none}
+.nav a:hover{color:var(--tx)}
+.btn{display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 22px;border-radius:999px;background:var(--tx);color:#111;font-weight:500;font-size:16px;text-decoration:none;white-space:nowrap}
+.btn.ghost{background:transparent;color:var(--tx);box-shadow:inset 0 0 0 1px var(--bd2)}
+.btn.sm{height:38px;padding:0 16px;font-size:14.5px}
+.btn:hover{filter:brightness(1.08)}
+
+/* hero */
+.hero{position:relative;padding:24px 0 60px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0 -10% 0;-webkit-mask-image:linear-gradient(transparent,#000 180px);mask-image:linear-gradient(transparent,#000 180px);background:radial-gradient(640px 420px at 72% 32%,rgba(59,97,191,.20),transparent 70%),radial-gradient(520px 360px at 82% 66%,rgba(155,53,125,.16),transparent 70%),radial-gradient(520px 320px at 60% 52%,rgba(237,109,54,.10),transparent 70%);pointer-events:none}
+.hero::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:48px 48px;-webkit-mask-image:radial-gradient(900px 520px at 70% 45%,#000,transparent 75%);mask-image:radial-gradient(900px 520px at 70% 45%,#000,transparent 75%);pointer-events:none}
+.hero-g{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:center}
+.eyebrow{margin:0 0 22px;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--yel);font-weight:500}
+h1{margin:0 0 26px;font-size:clamp(40px,5vw,72px);line-height:1;letter-spacing:-.03em}
+h1 .gr{white-space:nowrap;background:linear-gradient(90deg,var(--blt) 0%,var(--org) 52%,var(--put) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin:0 0 34px;font-size:clamp(17px,1.4vw,20px);line-height:1.5;color:var(--tx2);max-width:31em}
+.sub b{color:var(--tx)}
+.ctas{display:flex;gap:12px;flex-wrap:wrap}
+.hero-v{position:relative}
+.hv{width:100%;height:auto;display:block;overflow:visible}
+.hv text{font-family:'Proxima Nova',system-ui,sans-serif}
+.hv .t1{font-size:19px;font-weight:500;fill:#E0DED9}
+.hv .t2{font-size:14px;fill:var(--tx3)}
+.hv .t3{font-size:13.5px;fill:#b8b8b8}
+.hv-wide .t3{font-size:15px}
+.hv-tall{display:none}
+.hm{position:absolute;left:60.88%;top:50%;width:4.5%;transform:translate(-50%,-50%);pointer-events:none}
+.hm .tn-mark,.cm .tn-mark,.mm .tn-mark{display:block;width:100%;height:auto}
+@media (min-width:1241px){.hero-v{margin-right:-24px}}
+.fl{fill:none;stroke:#fff;stroke-opacity:.85;stroke-linecap:round;stroke-dasharray:.4 49.6;animation:flow 4.5s linear infinite}
+.fl.b{animation-delay:-1.4s}.fl.c{animation-delay:-2.9s}
+@keyframes flow{to{stroke-dashoffset:-100}}
+.pulse{animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+.proof{position:relative;z-index:1;list-style:none;margin:56px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 32px}
+.proof li{border-top:1px solid #2c2c2c;padding-top:18px;font-size:15px;line-height:1.45;color:var(--tx2)}
+.proof .pt{display:block;color:var(--tx);font-weight:500;font-size:16px;margin-bottom:4px}
+
+/* feature sections */
+.feat{position:relative;padding:50px 0 54px;border-top:1px solid var(--ln3)}
+.f-blue{--c:var(--blue);--ct:var(--blt)}
+.f-org{--c:var(--org);--ct:var(--org)}
+.f-pur{--c:var(--pur);--ct:var(--put)}
+.fh{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:24px 64px;align-items:end;margin-bottom:28px}
+.tag{display:flex;align-items:center;gap:12px;margin:0 0 12px;font-size:13px;line-height:1.3;letter-spacing:.18em;text-transform:uppercase;color:var(--ct);font-weight:500}
+.tag svg{width:30px;height:12px;flex:none;color:var(--c,var(--yel))}
+.tg-y{color:var(--yel)}
+h2{text-wrap:balance;margin:0 0 12px;font-size:clamp(30px,3vw,44px);line-height:1.06;letter-spacing:-.022em}
+.lede{margin:0;font-size:18px;line-height:1.55;color:var(--tx2);max-width:34em}
+.lede code,.cta code{white-space:nowrap;font-size:.88em;color:var(--tx);background:#1e1e1e;border:1px solid #2e2e2e;border-radius:var(--r1);padding:1px 6px}
+.caps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:18px 28px}
+.caps li{border-top:2px solid var(--c);padding-top:11px}
+.caps h3{margin:0 0 3px;font-size:16.5px;letter-spacing:.003em}
+.caps p{margin:0;font-size:15px;line-height:1.45;color:var(--tx2)}
+.caps code{font-size:13.5px;color:var(--tx)}
+.vis{position:relative}
+.vis::before{content:"";position:absolute;inset:8% 6% -4%;background:radial-gradient(closest-side,color-mix(in srgb,var(--c) 34%,transparent),transparent);filter:blur(50px);opacity:.55;pointer-events:none}
+
+/* frames (mocks) */
+.frame{position:relative;margin:0;background:#151515;border:1px solid #343434;border-radius:var(--r4);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 60px 110px -50px #000,0 0 0 1px rgba(0,0,0,.5);font-size:13px;line-height:1.4;color:var(--tx);font-variant-numeric:tabular-nums;text-align:left}
+.frame b{font-weight:500}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;flex:none;background:#666}
+.dot.g{background:var(--ok)}.dot.o{background:var(--org)}.dot.y{background:var(--yel)}.dot.r{background:var(--bad)}
+.mu{color:var(--mu)}
+
+/* console */
+.cn-top{display:flex;align-items:center;gap:14px;height:46px;padding:0 14px;background:#191919;border-bottom:1px solid var(--s2);border-radius:var(--r4) var(--r4) 0 0}
+.cn-top .tn-mark{width:22px;height:22px;flex:none}
+.cn-ts{display:flex;align-items:center;gap:8px;padding:5px 10px;border:1px solid #333;border-radius:var(--r2);background:#202020;font-weight:500;white-space:nowrap}
+.cn-ts small{color:var(--tx3);font-weight:400;font-size:11px}
+.cn-q{flex:1;max-width:380px;display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border:1px solid #2c2c2c;border-radius:var(--r2);background:#1d1d1d;color:var(--mu);white-space:nowrap;overflow:hidden}
+kbd{font-size:11px;color:var(--tx3);border:1px solid #3a3a3a;border-radius:var(--r1);padding:0 5px}
+.cn-tr{margin-left:auto;display:flex;align-items:center;gap:10px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:999px;font-size:12px;background:#231a15;color:var(--ort);border:1px solid #4a2c1d;white-space:nowrap}
+.chip u{text-decoration:none;color:#ffc2a6;border-left:1px solid #4a2c1d;padding-left:8px;margin-left:1px}
+.av{width:28px;height:28px;border-radius:50%;background:#2b3f73;display:grid;place-items:center;font-size:11px;font-weight:500;color:#e6ecff}
+.cn-b{display:grid;grid-template-columns:168px minmax(0,1fr)}
+.cn-nav{padding:8px 8px 12px;border-right:1px solid var(--ln);display:flex;flex-direction:column;gap:1px;font-size:13px;color:#bcbab5}
+.cn-nav .g{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx4);padding:11px 10px 3px}
+.cn-nav .i{display:flex;justify-content:space-between;padding:4px 10px;border-radius:var(--r2)}
+.cn-nav .on{background:#212a40;color:#fff;box-shadow:inset 2px 0 0 var(--blue)}
+.cn-nav em{color:var(--tx3);font-size:12px}
+.cn-nav em.w{color:var(--yel)}
+.cn-m{padding:10px 12px 12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.cn-kp{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.kp{background:#1b1b1b;border:1px solid var(--s2);border-radius:var(--r3);padding:7px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kl{font-size:12px;color:var(--tx3)}
+.kv{font-size:23px;font-weight:500;letter-spacing:-.01em;line-height:1.15}
+.kv small{font-size:12px;color:var(--tx3);font-weight:400;letter-spacing:0}
+.ks{font-size:11.5px;color:#b9b7b2;display:flex;flex-wrap:wrap;align-items:center;gap:0 5px}
+.ks>span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;margin-right:6px}
+.bar3{display:flex;gap:3px;margin:3px 0 1px}
+.bar3 i{flex:1;height:5px;border-radius:2px;background:var(--ok)}
+.bar3 i.p{background:linear-gradient(90deg,var(--ok) 0 96%,#333 96%)}.bar3 i.q{background:linear-gradient(90deg,var(--ok) 0 92%,#333 92%)}
+.spk{width:100%;height:26px;display:block}
+.cn-r2{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:10px;align-items:start}
+.cn-r3{display:grid;grid-template-columns:minmax(0,1fr) 296px;gap:10px;align-items:start}
+.pn{background:#1b1b1b;border:1px solid var(--s2);border-radius:var(--r3);min-width:0}
+.ph{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--ln);font-weight:500;font-size:12.5px}
+.ph em{font-size:11px;background:#3a1c1a;color:var(--badt);border-radius:999px;padding:0 7px}
+.ph span{margin-left:auto;color:var(--tx3);font-weight:400;font-size:11.5px}
+.pi{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:2px 10px;padding:8px 12px;border-bottom:1px solid var(--ln2);align-items:start}
+.pi:last-child{border-bottom:0}
+.pi .dot{margin-top:5px}
+.pi .t{font-size:13px}
+.pi .t b{margin-right:6px}
+.pi .m{grid-column:2;font-size:11.5px;color:var(--tx3)}
+.pi .a{grid-row:1/3;grid-column:3;align-self:center;font-size:11.5px;border:1px solid #3a3a3a;border-radius:var(--r2);padding:3px 9px;color:#d6d4cf;white-space:nowrap}
+.pi .a.bl{border-color:var(--blue);color:#c9d5f5;background:#1c2438;box-shadow:0 0 0 3px rgba(59,97,191,.25)}
+.plan{display:block;width:100%;height:auto}
+.plan text{font-family:'Proxima Nova',system-ui,sans-serif;font-size:10px;fill:#a3a3a3;text-anchor:middle}
+.plan .s{text-anchor:start}
+.tb .tr{display:grid;grid-template-columns:.95fr 1fr 1.15fr 1fr .72fr 1.18fr;gap:10px;align-items:center;padding:5px 12px;border-bottom:1px solid var(--ln2);white-space:nowrap}
+.tb .tr:last-child{border-bottom:0}
+.tb .th{font-size:11.5px;color:var(--tx3);letter-spacing:.02em;padding:7px 12px}
+.tb .tr>span{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.tb .n{display:flex;align-items:center;gap:8px;font-weight:500}
+.tb .c2,.tb .c3{color:#bcbab5}
+.tb .sum{display:block;color:var(--tx3);font-size:12px}
+.st3{display:inline-flex;align-items:center;gap:6px;color:#bcbab5}
+.st3 s{display:inline-flex;gap:2px;text-decoration:none}
+.st3 s i{width:10px;height:6px;border-radius:2px;background:var(--ok)}
+.st3 s i.w{background:#3a3a3a;box-shadow:inset 0 0 0 1px var(--yel)}
+.st3 s i.z{background:#333}
+.tb svg{width:58px;height:16px;display:block}
+.acc{display:flex;gap:5px}
+.acc b{font-size:11px;font-weight:500;border:1px solid #3a3a3a;border-radius:var(--r1);padding:2px 6px;color:#d6d4cf;background:#202020}
+.acc b.k{border-color:#2f4680;color:#c9d5f5;background:#1a2235}
+.acc b.x{color:var(--tx4);border-color:#2e2e2e;background:transparent}
+.diff{background:#1a1a1a;border:1px solid #3d4d78;border-radius:var(--r3);overflow:hidden;box-shadow:0 0 0 3px rgba(59,97,191,.12)}
+.diff .dh{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--s2);font-weight:500}
+.diff .dh span{font-weight:400;font-size:11.5px;color:var(--tx3)}
+.diff pre{margin:0;padding:8px 12px;font-size:12px;line-height:1.6;background:#151515;color:#c9c7c2;white-space:pre;overflow:hidden}
+.diff .del{display:block;background:rgba(229,83,75,.12);color:var(--badt);margin:0 -12px;padding:0 12px}
+.diff .add{display:block;background:rgba(79,176,122,.13);color:var(--okt);margin:0 -12px;padding:0 12px}
+.diff .df{display:flex;align-items:center;gap:8px;padding:9px 12px;border-top:1px solid var(--s2);font-size:11.5px;line-height:1.35;color:var(--tx3)}
+.diff .df b{margin-left:auto;background:var(--blue);color:#fff;border-radius:var(--r2);padding:5px 11px;font-size:12px;white-space:nowrap}
+
+/* teknoirbot */
+.bt-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:10px 16px;background:#191919;border-bottom:1px solid var(--s2);border-radius:var(--r4) var(--r4) 0 0}
+.bt-av{width:34px;height:34px;border-radius:var(--r3);background:#2a1a12;border:1px solid #5a3220;display:grid;place-items:center;flex:none}
+.bt-av svg{width:20px;height:20px}
+.bt-n{display:flex;flex-direction:column;line-height:1.25}
+.bt-n b{font-size:15px}
+.bt-n small{font-size:11.5px;color:var(--tx3)}
+.seg{display:inline-flex;align-items:center;border:1px solid #333;border-radius:var(--r2);padding:2px;font-size:12px;color:#b3b3b3;background:#1b1b1b;white-space:nowrap}
+.seg span{padding:3px 9px;border-radius:var(--r1)}
+.seg .lb{color:var(--tx4);padding-right:4px}
+.seg .on{background:#3a2216;color:#ffc2a6;box-shadow:inset 0 0 0 1px #6b3a22}
+.spend{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--tx3);min-width:150px}
+.spend i{display:block;height:4px;border-radius:2px;background:#2c2c2c}
+.spend i s{display:block;height:4px;width:11%;border-radius:2px;background:var(--org)}
+.grow{flex:1}
+.bb{display:inline-flex;align-items:center;gap:9px;font-size:12px;border:1px solid #3a3a3a;border-radius:var(--r2);padding:6px 11px;color:#dcdad5;background:#202020;white-space:nowrap}
+.bb.dk{padding:4px 11px 4px 4px}
+.bb.dk svg{width:60px;height:34px;display:block;border-radius:var(--r1)}
+.bb.stop{border-color:#7a3a2a;color:#ffb39a;background:#2a1712}
+.bb.stop i{width:8px;height:8px;border-radius:2px;background:#ff7a55}
+.pipe{display:grid;grid-template-columns:minmax(0,1fr) 30px minmax(0,1.22fr) 30px minmax(0,1.12fr);padding:14px 16px 16px}
+.col{display:flex;flex-direction:column;gap:9px;min-width:0}
+.ch{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);padding:0 2px 2px}
+.ch span{letter-spacing:.02em;text-transform:none;color:var(--ort)}
+.nd,.jb{position:relative;background:var(--ln3);border:1px solid #2d2d2d;border-radius:var(--r3);padding:8px 11px;display:flex;flex-direction:column;gap:2px}
+.nd small,.jb small{font-size:11.5px;color:var(--tx3)}
+.src .nd::after,.jb::after,.jb::before,.out .nd::before{content:"";position:absolute;top:20px;width:15px;height:8px;margin-top:-4px;background:linear-gradient(#6b3a22,#6b3a22) 0 50%/100% 1px no-repeat}
+.src .nd::after,.jb::after{left:100%}
+.jb::before,.out .nd::before{right:100%;background:radial-gradient(circle at 4px 50%,#ED6D36 2.5px,transparent 3px),linear-gradient(#6b3a22,#6b3a22) 0 50%/100% 1px no-repeat}
+.src .nd.act::after,.jb.act::after{background:linear-gradient(var(--org),var(--org)) 0 50%/100% 2px no-repeat}
+.jb.act::before,.out .nd.act::before{background:radial-gradient(circle at 4px 50%,#ED6D36 3px,transparent 3.5px),linear-gradient(var(--org),var(--org)) 0 50%/100% 2px no-repeat}
+.bus{position:relative}
+.bus::before{content:"";position:absolute;left:14px;top:46px;bottom:57px;width:1px;background:#6b3a22}
+.bus::after{content:"";position:absolute;left:0;right:0;top:46px;height:2px;margin-top:-1px;background:var(--org)}
+.jb{border-color:#3d2a20;background:linear-gradient(180deg,#1f1915,#1b1b1b)}
+.jb .r1{display:flex;align-items:center;gap:8px;min-width:0}
+.jb code{font-size:12.5px;color:#f1efea;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.md{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;border-radius:var(--r1);padding:2px 7px;white-space:nowrap;background:#3a2216;color:#ffb08c;flex:none}
+.md svg{width:10px;height:10px;flex:none}
+.md.cr,.md.ba{background:var(--ln);color:#e0ded9;box-shadow:inset 0 0 0 1px #4a3020}
+.jm{display:flex;align-items:center;gap:8px;font-size:11.5px;color:#cfcdc8;margin-top:3px}
+.jm svg{width:72px;height:14px}
+.prog{flex:1;height:5px;border-radius:3px;background:#2c2c2c;overflow:hidden}
+.prog s{display:block;height:100%;width:64%;background:linear-gradient(90deg,#9a4a28,var(--org))}
+.steps{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.steps b{font-weight:400;font-size:11.5px;color:#d6d4cf;background:#222;border:1px solid #3a3a3a;border-radius:var(--r1);padding:0 6px}
+.steps b.a{color:#ffd88a;border-color:#7a6220;background:#29230f}
+.fls{display:flex;flex-direction:column;gap:2px;margin-top:6px;font-family:var(--mono);font-size:11.5px;color:#c9c7c2}
+.fls span{display:flex;justify-content:space-between;gap:8px;background:#161616;border-radius:var(--r1);padding:1px 6px;white-space:nowrap;overflow:hidden}
+.fls em{color:var(--tx4)}
+.fm{font-size:11.5px;color:var(--tx3);margin-top:4px}
+.fm b{color:#ffb08c}
+.nd.ins{border-color:#4a3b17;background:linear-gradient(180deg,#201c12,var(--ln3))}
+.nd.ins b::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--yel);margin-right:7px;vertical-align:1px}
+.audit{display:flex;flex-wrap:wrap;gap:6px 18px;padding:9px 16px;border-top:1px solid var(--ln);font-family:var(--mono);font-size:11.5px;color:var(--tx3);background:#161616;border-radius:0 0 var(--r4) var(--r4)}
+.audit .al{color:var(--ort);font-family:'Proxima Nova',system-ui,sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.audit .as{color:#ffc2a6}
+
+/* tnctl + mcp */
+.duo{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:18px;align-items:stretch}
+.agent{display:flex;flex-direction:column;background:#141414}
+.wbar{display:flex;align-items:center;gap:7px;height:38px;padding:0 14px;border-bottom:1px solid var(--ln);background:#191919;border-radius:var(--r4) var(--r4) 0 0;font-size:12px;color:var(--tx3);white-space:nowrap}
+.wbar i{width:11px;height:11px;border-radius:50%;background:#333}
+.wbar>span{margin-left:8px}
+.wbar>span.w0{margin-left:0}
+.wbar .st{color:var(--tx4);overflow:hidden;text-overflow:ellipsis}
+.wbar .mcp{margin-left:auto;display:inline-flex;align-items:center;gap:6px;border:1px solid #5a2f50;background:#26161f;color:#e7b2d8;border-radius:999px;padding:2px 9px;font-size:11.5px;flex:none}
+.term pre{margin:0;padding:14px 16px 16px;font-size:12.5px;line-height:1.62;color:#cfcdc8;white-space:pre;overflow:hidden;background:#121212;border-radius:0 0 var(--r4) var(--r4)}
+.term .p{color:var(--put)}.term .c{color:#f1efea}.term .o{color:var(--tx3)}.term .h{color:var(--tx4)}.term .k{color:var(--ok)}.term .w{color:var(--badt)}.term .y{color:var(--yel)}
+.cur{display:inline-block;width:8px;height:15px;background:var(--put);vertical-align:-3px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.ag{flex:1;padding:14px 16px 16px;display:flex;flex-direction:column;gap:9px;font-size:13px}
+.you{align-self:flex-end;max-width:88%;background:#272727;border-radius:var(--r3) var(--r3) var(--r1) var(--r3);padding:8px 12px;color:#f1efea}
+.tc{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;color:#cfcdc8;min-width:0;white-space:nowrap}
+.tc b{font-weight:400;flex:none}
+.tc i{width:7px;height:7px;border-radius:50%;background:var(--pur);flex:none}
+.tc>span{color:var(--tx4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.tc em{margin-left:auto;color:var(--okt);white-space:nowrap;padding-left:6px}
+.tc.tn i{background:var(--ok)}
+.say{color:#dcdad5;line-height:1.5}
+.say b{color:#fff}
+.ask{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border:1px solid #3d2a37;background:#1d151b;border-radius:var(--r3);padding:8px 12px;color:#e7b2d8}
+.ask b{margin-left:auto;background:var(--pur);color:#fff;border-radius:var(--r2);padding:4px 10px;font-size:12px}
+.ask s{text-decoration:none;border:1px solid #4a3a45;border-radius:var(--r2);padding:3px 10px;font-size:12px;color:#d6d4cf}
+.prompt{margin-top:auto;display:flex;align-items:center;gap:8px;border:1px solid #2f2f2f;border-radius:var(--r3);padding:8px 12px;color:var(--tx4)}
+
+/* fit */
+.fit{padding:72px 0 72px;border-top:1px solid var(--ln3)}
+.fit .fh{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);margin-bottom:28px}
+.fit h2{margin-bottom:0}
+.metro{display:none;position:relative;height:104px}
+.metro>svg{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible}
+.metro>svg path{fill:none;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.metro>svg .ln{stroke-linecap:butt;opacity:.22}
+.metro>svg .end{stroke-linecap:butt}
+.ml{position:absolute;font-size:11px;line-height:1;letter-spacing:.12em;text-transform:uppercase;font-weight:500;opacity:.85;white-space:nowrap}
+.mn{position:absolute;width:20px;height:20px;border-radius:50%;background:var(--bg);box-shadow:inset 0 0 0 5px var(--c)}
+.mm{position:absolute;right:0;top:10px;width:46px;line-height:0}
+.story{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:44px 0}
+.sp{position:relative;padding:30px 28px 0 0;--c:var(--org);--ct:var(--org)}
+.sp.pu{--c:var(--pur);--ct:var(--put)}.sp.bl{--c:var(--blue);--ct:var(--blt)}
+.sp::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:var(--c)}
+.sp::after{content:"";position:absolute;left:0;top:-7px;width:20px;height:20px;border-radius:50%;background:var(--bg);box-shadow:inset 0 0 0 5px var(--c)}
+.sp .when{display:flex;align-items:baseline;gap:10px;margin:0 0 6px;font-size:13px;color:var(--ct);letter-spacing:.06em;text-transform:uppercase;font-weight:500}
+.sp .when time{font-family:var(--mono);font-size:14px;letter-spacing:0;color:var(--tx)}
+.sp h3{margin:0 0 5px;font-size:21px;letter-spacing:-.005em}
+.sp p{margin:0 0 12px;font-size:15px;line-height:1.5;color:var(--tx2)}
+.mini{margin:0;min-height:94px;font-family:var(--mono);font-size:11.5px;line-height:1.6;color:#cfcdc8;background:#171717;border:1px solid #2b2b2b;border-left:2px solid var(--c);border-radius:var(--r3);padding:9px 11px;white-space:pre;overflow:hidden}
+.mini .o{color:var(--tx3)}.mini .k{color:var(--okt)}.mini .p{color:var(--put)}.mini .r{color:var(--badt)}
+.sp .sh{display:flex;flex-wrap:wrap;gap:4px;margin:10px 0 0}
+.sh span{font-family:var(--mono);font-size:11px;line-height:1.6;color:#cfcdc8;background:#191919;border:1px solid #333;border-radius:var(--r1);padding:0 5px}
+.sh .f{color:#FFD88A;background:#221c0c;border-color:#6b5414}
+.ground{position:relative;margin-top:40px;border-radius:var(--r4);background:#151515;border:1px solid var(--s2);padding:20px 24px 18px;display:grid;grid-template-columns:minmax(0,.9fr) repeat(4,minmax(0,1fr));gap:18px 24px;align-items:center;overflow:hidden}
+.ground::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,var(--yel) 0 25%,var(--org) 25% 50%,var(--pur) 50% 75%,var(--blue) 75%)}
+.gl{display:flex;align-items:center;gap:14px;font-size:16px;font-weight:500;line-height:1.25}
+.gl .tn-mark{width:36px;height:36px;flex:none;display:block}
+.gi{display:flex;flex-direction:column;gap:2px;border-left:1px solid #2e2e2e;padding-left:18px}
+.gi b{font-size:16px}
+.gi span{font-size:14px;line-height:1.4;color:var(--tx2)}
+@media (min-width:1241px){
+ .metro{display:block}
+ .story{grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-top:6px}
+ .sp{padding-top:0}
+ .sp::before,.sp::after{display:none}
+ .sp h3+p{min-height:4.5em}
+}
+@media (min-width:641px){.sp .sh{margin-right:-20px}.nwd{white-space:nowrap}}
+
+/* foundations */
+.found{padding:48px 0 56px;border-top:1px solid var(--ln3)}
+.found h2.tag{font-size:13px;letter-spacing:.18em;margin:0 0 18px;color:var(--yel)}
+.fg{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px 28px}
+.fg>li{padding:12px 0 0;border-top:2px solid rgba(224,173,27,.55)}
+@media (min-width:1101px){.fg{grid-template-columns:1fr 1fr 1.6fr 1fr}}
+.fg h3{margin:0 0 4px;font-size:14.5px}
+.fg p{margin:0;font-size:13.5px;line-height:1.45;color:var(--tx2)}
+.fg .layers{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:2px;margin:3px 0 5px;font-family:var(--mono);font-size:11px;line-height:1.35}
+.layers li{padding:0 4px;border-radius:var(--r1);background:#222;border:1px solid #333;color:#cfcdc8}
+.layers li:last-child{border-color:#6b3a22;color:#ffb08c;background:#2a1a12}
+
+/* close */
+.close{position:relative;padding:104px 0 96px;text-align:center;overflow:hidden;border-top:1px solid var(--ln3)}
+.close::before{content:"";position:absolute;inset:auto 0 -40% 0;height:120%;background:radial-gradient(520px 300px at 50% 70%,rgba(59,97,191,.18),transparent 70%),radial-gradient(420px 260px at 38% 80%,rgba(237,109,54,.12),transparent 70%),radial-gradient(420px 260px at 62% 80%,rgba(155,53,125,.14),transparent 70%);pointer-events:none}
+.close .wrap{position:relative}
+.cm{display:block;width:64px;margin:0 auto 30px}
+.close h2{font-size:clamp(30px,4.4vw,62px);max-width:15em;margin:0 auto 20px}
+.close p{max-width:36em;margin:0 auto;font-size:19px;color:var(--tx2)}
+.close .cta{margin-top:34px;font-size:22px;color:var(--tx)}
+.cta .url{font-weight:500;padding-bottom:6px;white-space:nowrap;background:linear-gradient(90deg,var(--yel) 0 25%,var(--org) 25% 50%,var(--pur) 50% 75%,var(--blue) 75%) 0 100%/100% 3px no-repeat}
+footer{border-top:1px solid var(--ln3);padding:24px 0;font-size:14px;color:var(--tx3)}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+footer .tn-logo{width:120px;height:auto;display:block;opacity:.9}
+
+/* responsive */
+@media (max-width:1240px){
+ .tb .tr{grid-template-columns:1fr 1fr 1.15fr 1fr 1.18fr}
+ .tb .tr>.cpu{display:none}
+ .wbar .st{display:none}
+}
+@media (max-width:1180px){
+ .cn-r3{grid-template-columns:1fr}
+ .chip .cw{display:none}
+ .chip u{border:0;padding:0;margin:0}
+}
+@media (max-width:1100px){
+ .hero-g{grid-template-columns:1fr;gap:48px}
+ .hero-v{max-width:760px;margin:0 auto;width:100%}
+ .fh,.fit .fh{grid-template-columns:1fr;gap:28px}
+ .proof{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 32px}
+ .cn-r2{grid-template-columns:1fr}
+ .cn-r2>.pn:last-child{display:none}
+ .bt-n{flex:1 1 auto}
+ .bt-top .grow{display:none}
+ .bt-top .seg{order:5}
+ .spend{order:6;flex:1 1 150px}
+ .fg{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:900px){
+ .nav{display:none}
+ .top .btn{margin-left:auto}
+ .cn-b{grid-template-columns:1fr}
+ .cn-nav,.cn-q{display:none}
+ .cn-kp{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .bb.dk svg{display:none}
+ .bb.dk{padding:6px 11px}
+ .pipe{grid-template-columns:1fr}
+ .bus{height:24px}
+ .bus::before{left:50%;top:3px;bottom:3px}
+ .bus::after{display:none}
+ .src .nd::after,.jb::after,.jb::before,.out .nd::before{display:none}
+ .src{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .src .ch{grid-column:1/-1}
+ .src .nd:last-child{grid-column:1/-1}
+ .duo{grid-template-columns:minmax(0,1fr)}
+ .ground{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .gl{grid-column:1/-1}
+}
+@media (min-width:641px) and (max-width:900px){
+ .jobs,.out{display:grid;grid-template-columns:1fr 1fr;gap:9px;align-items:start}
+ .jobs .ch,.out .ch{grid-column:1/-1}
+ .out .ch+.nd{grid-row:span 2}
+}
+@media (min-width:641px) and (max-width:720px){.tb .tr{grid-template-columns:1fr 1.15fr 1fr 1.18fr}.tb .tr>.c3{display:none}}
+@media (max-width:640px){
+ .wrap{padding:0 18px}
+ body{font-size:16px}
+ .top .wrap{height:64px}
+ .top .tn-logo{width:136px}
+ .hero{padding:10px 0 48px}
+ h1{font-size:min(10.4vw,52px)}
+ .ctas .btn{height:44px;padding:0 16px;font-size:15px}
+ .ctas{gap:10px}
+ .hv-wide{display:none}
+ .hv-tall{display:block}
+ .hm{left:50%;top:44.55%;width:8.4%}
+ .proof{grid-template-columns:1fr;gap:16px;margin-top:40px}
+ .feat,.fit{padding:60px 0 64px}
+ .lede{font-size:17px}
+ .caps{grid-template-columns:1fr;gap:16px}
+ .frame{font-size:12.5px}
+ .cn-top{gap:10px}
+ .chip{display:none}
+ .tb .tr{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:8px}
+ .tb .tr>.c2,.tb .tr>.c3{display:none}
+ .acc b+b{display:none}
+ .cn-kp{gap:8px}
+ .kp{padding:9px 10px}
+ .kv{font-size:21px}
+ .bt-top{gap:10px}
+ .src .nd:nth-of-type(n+4){display:none}
+ .src .nd small{font-size:11.5px}
+ .term pre{font-size:11px;padding:12px 10px;white-space:pre-wrap;overflow-wrap:anywhere}
+ .tc>span{display:none}
+ .tc{align-items:flex-start}
+ .tc i{margin-top:4px}
+ .tc b{flex:1 1 auto;white-space:normal}
+ .xm{display:none}
+ .story{grid-template-columns:1fr;gap:0}
+ .sp{padding:0 0 30px 32px}
+ .sp::before{left:7px;right:auto;top:0;bottom:0;width:6px;height:auto;border-radius:3px}
+ .sp:last-child::before{background:linear-gradient(180deg,var(--org) 60%,rgba(237,109,54,0))}
+ .sp::after{left:0;top:0}
+ .ground{grid-template-columns:1fr 1fr;gap:16px 14px;padding:20px 16px 18px;align-items:start}
+ .gi{padding-left:12px}
+ .gi b{font-size:15px}
+ .gi span{font-size:13.5px}
+ .fg{grid-template-columns:1fr 1fr}
+ .close{padding:80px 0 72px}
+ .close p{font-size:17px}
+ .close .cta{font-size:20px}
+ footer .tn-logo{width:104px}
+}
+@media (prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation:none !important;transition:none !important}
+ html{scroll-behavior:auto}
+ .fl{display:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#console">Skip to the features</a>
+<svg class="defs" aria-hidden="true" focusable="false">
+ <defs><g id="ta"><rect x=".5" y=".5" width="40" height="34" rx="6" fill="#202020" stroke="#333"/><g transform="translate(5 4) scale(1.15)" fill="none" stroke="#8a8a8a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"><path d="M5 20h9M9.5 20v-3.5M9.5 16.5l4-6.5M13.5 10l5 1.5M18.5 11.5l2-2.5M18.5 11.5l2.5 1.5"/><circle cx="13.5" cy="10" r="1.4" fill="#8a8a8a" stroke="none"/></g><circle cx="33" cy="8" r="3" fill="#4FB07A"/></g><g id="tm"><rect x=".5" y=".5" width="40" height="34" rx="6" fill="#202020" stroke="#333"/><g fill="none" stroke="#8a8a8a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="14" width="19" height="10" rx="2.5"/></g><g fill="#8a8a8a"><circle cx="14.5" cy="26.5" r="2"/><circle cx="24.5" cy="26.5" r="2"/></g><circle cx="33" cy="8" r="3" fill="#4FB07A"/></g><g id="tc"><rect x=".5" y=".5" width="40" height="34" rx="6" fill="#202020" stroke="#333"/><g fill="none" stroke="#8a8a8a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="14" width="14" height="11" rx="2.5"/><path d="M24 18L30 15V24L24 21"/></g><circle cx="33" cy="8" r="3" fill="#4FB07A"/></g><g id="tb"><rect x=".5" y=".5" width="40" height="34" rx="6" fill="#202020" stroke="#333"/><g fill="none" stroke="#8a8a8a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="11" y="12" width="17" height="15" rx="2.5"/><path d="M14.5 17H24.5M14.5 21H21"/></g><circle cx="33" cy="8" r="3" fill="#4FB07A"/></g></defs>
+ 
+ <symbol id="g-tag" viewBox="0 0 30 12"><path d="M1 10H11L19 2H29" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"/></symbol>
+</svg>
+
+<header class="top">
+ <div class="wrap">
+  <a href="#top" aria-label="Teknoir, to the top"><!--@@LOGO@@--></a>
+  <nav class="nav" aria-label="Sections">
+   <a href="#console">Console</a><a href="#bot">TeknoirBot</a><a href="#cli">tnctl + MCP</a><a href="#fit">One fix</a>
+  </nav>
+  <a class="btn sm" href="#start">Start with one robot</a>
+ </div>
+</header>
+
+<main>
+<section class="hero" aria-labelledby="h1">
+ <div class="wrap hero-g">
+  <div class="hero-t">
+   <p class="eyebrow">The edge and robot fleet platform</p>
+   <h1 id="h1">Any robot.<br>Any workload.<br><span class="gr">Any way you work.</span></h1>
+   <p class="sub">Run your fleet from the <b>console</b>. Hand the night shift to a <b>TeknoirBot</b>, an AI engineer bound by your rights. Drive it from your <b>terminal and coding agent</b>. Three doors, one fleet.</p>
+   <div class="ctas"><a class="btn" href="#fit">Follow one fix through all three</a><a class="btn ghost" href="#console">See the console</a></div>
+  </div>
+  <div class="hero-v">
+   <svg class="hv hv-wide" viewBox="0 0 680 500" role="img" aria-label="The console, TeknoirBot, and tnctl with MCP converge in the Teknoir mark and reach one fleet of robots">
+    <g fill="none" stroke-width="14">
+     <path d="M237 80H244L398 234H420" stroke="#3B61BF"/><path d="M237 250H420" stroke="#ED6D36"/><path d="M237 420H244L398 266H420" stroke="#9B357D"/><path d="M430 250H472" stroke="#E0AD1B"/>
+    </g>
+    <g stroke-width="5">
+     <path class="fl" pathLength="100" d="M237 80H244L398 234H420"/><path class="fl b" pathLength="100" d="M237 250H420"/><path class="fl c" pathLength="100" d="M237 420H244L398 266H420"/>
+    </g>
+    <rect x=".5" y="36.5" width="236" height="88" rx="12" fill="#171717" stroke="#3a3a3a"/><rect x="16" y="54" width="4" height="52" rx="2" fill="#3B61BF"/>
+    <text class="t1" x="34" y="75">Console</text><text class="t2" x="34" y="100">Manage, validate, understand</text><rect x="196" y="58" width="22" height="16" rx="3" fill="none" stroke="#8DA6E8" stroke-width="1.8"/><path d="M196 63H218" stroke="#8DA6E8" stroke-width="1.8"/>
+    <rect x=".5" y="206.5" width="236" height="88" rx="12" fill="#171717" stroke="#3a3a3a"/><rect x="16" y="224" width="4" height="52" rx="2" fill="#ED6D36"/>
+    <text class="t1" x="34" y="245">TeknoirBot</text><text class="t2" x="34" y="270">Jobs and agents, 24/7</text><circle cx="207" cy="236" r="10" fill="none" stroke="#ED6D36" stroke-width="1.8"/><path d="M207 230.5V236L211.5 238.5" fill="none" stroke="#ED6D36" stroke-width="1.8" stroke-linecap="round"/>
+    <rect x=".5" y="376.5" width="236" height="88" rx="12" fill="#171717" stroke="#3a3a3a"/><rect x="16" y="394" width="4" height="52" rx="2" fill="#9B357D"/>
+    <text class="t1" x="34" y="415">tnctl + MCP</text><text class="t2" x="34" y="440">Terminal and coding agents</text><path d="M197 398L204 404L197 410M208 411H218" fill="none" stroke="#D08BC0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="388.5" y="224.5" width="51" height="51" rx="12" fill="#161616" stroke="#3a3a3a"/>
+    <rect x="470.5" y="60.5" width="209" height="379" rx="14" fill="#161616" stroke="#3a3a3a"/>
+    <path d="M484 61H666" stroke="#E0AD1B" stroke-width="3" stroke-linecap="round"/>
+    <text class="t1" x="484" y="94">Your fleet</text><text class="t2" x="484" y="116" style="font-size:15px">148 robots · 3 sites · live</text>
+    <g><use href="#ta" x="483" y="130"/><use href="#ta" x="531" y="130"/><use href="#ta" x="579" y="130"/><use href="#tc" x="627" y="130"/><use href="#tm" x="483" y="172"/><use href="#tm" x="531" y="172"/><use href="#tb" x="579" y="172"/><use href="#tc" x="627" y="172"/><use href="#ta" x="483" y="214"/><use href="#ta" x="531" y="214"/><use href="#ta" x="579" y="214"/><use href="#ta" x="627" y="214"/><use href="#tm" x="483" y="256"/><use href="#tm" x="531" y="256"/><use href="#tm" x="579" y="256"/><use href="#tb" x="627" y="256"/><use href="#tc" x="483" y="298"/><use href="#tb" x="531" y="298"/><use href="#ta" x="579" y="298"/><use href="#tm" x="627" y="298"/></g>
+    <g fill="none" stroke-width="1.8"><rect x="627.5" y="130.5" width="40" height="34" rx="6" stroke="#8DA6E8"/><rect x="483.5" y="214.5" width="40" height="34" rx="6" stroke="#ED6D36"/><rect x="531.5" y="214.5" width="40" height="34" rx="6" stroke="#ED6D36"/><rect x="579.5" y="214.5" width="40" height="34" rx="6" stroke="#ED6D36"/><rect x="531.5" y="298.5" width="40" height="34" rx="6" stroke="#D08BC0"/></g><g fill="#E5534B"><circle cx="516" cy="222" r="3"/><circle cx="564" cy="222" r="3"/><circle cx="612" cy="222" r="3"/></g><g fill="#E0AD1B"><circle cx="564" cy="180" r="3"/><circle cx="516" cy="306" r="3"/></g>
+    <rect x="484" y="362" width="10" height="10" rx="2" fill="none" stroke="#8DA6E8" stroke-width="1.8"/><text class="t3" x="502" y="371.5">open in the console</text>
+    <rect x="484" y="384" width="10" height="10" rx="2" fill="none" stroke="#ED6D36" stroke-width="1.8"/><text class="t3" x="502" y="393.5">a bot on a gripper alert</text>
+    <rect x="484" y="406" width="10" height="10" rx="2" fill="none" stroke="#D08BC0" stroke-width="1.8"/><text class="t3" x="502" y="415.5">your agent, via MCP</text>
+   </svg>
+   <svg class="hv hv-tall" viewBox="0 0 360 404" role="img" aria-label="The console, TeknoirBot, and tnctl with MCP converge in the Teknoir mark and reach one fleet of robots">
+    <g fill="none" stroke-width="12">
+     <path d="M56 62V70L166 180H170" stroke="#3B61BF"/>
+     <path d="M180 62V170" stroke="#ED6D36"/>
+     <path d="M304 62V70L194 180H190" stroke="#9B357D"/>
+     <path d="M180 200V231" stroke="#E0AD1B"/>
+    </g>
+    <g stroke-width="4">
+     <path class="fl" pathLength="100" d="M56 62V70L166 180"/>
+     <path class="fl b" pathLength="100" d="M180 62V170"/>
+     <path class="fl c" pathLength="100" d="M304 62V70L194 180"/>
+    </g>
+    <rect x="154.5" y="154.5" width="51" height="51" rx="12" fill="#161616" stroke="#3a3a3a"/>
+    <rect x=".5" y=".5" width="111" height="61" rx="10" fill="#171717" stroke="#363636"/>
+    <rect x="12" y="12" width="24" height="3" rx="1.5" fill="#3B61BF"/>
+    <text class="t1" x="12" y="34" style="font-size:15px">Console</text><text class="t2" x="12" y="51" style="font-size:12.5px">In the browser</text>
+    <rect x="124.5" y=".5" width="111" height="61" rx="10" fill="#171717" stroke="#363636"/>
+    <rect x="136" y="12" width="24" height="3" rx="1.5" fill="#ED6D36"/>
+    <text class="t1" x="136" y="34" style="font-size:15px">TeknoirBot</text><text class="t2" x="136" y="51" style="font-size:12.5px">Always on</text>
+    <rect x="248.5" y=".5" width="111" height="61" rx="10" fill="#171717" stroke="#363636"/>
+    <rect x="260" y="12" width="24" height="3" rx="1.5" fill="#9B357D"/>
+    <text class="t1" x="260" y="34" style="font-size:15px">tnctl + MCP</text><text class="t2" x="260" y="51" style="font-size:12.5px">Your terminal</text>
+    <rect x="10.5" y="230.5" width="339" height="172" rx="12" fill="#161616" stroke="#3a3a3a"/>
+    <path d="M24 231H336" stroke="#E0AD1B" stroke-width="3" stroke-linecap="round"/>
+    <text class="t1" x="26" y="258" style="font-size:15px">Your fleet</text>
+    <text class="t2" x="334" y="258" text-anchor="end" style="font-size:12.5px">148 robots · 3 sites</text>
+    <g transform="translate(26 270) scale(.825)"><use href="#ta" x="0" y="0"/><use href="#ta" x="47.3" y="0"/><use href="#tc" x="94.5" y="0"/><use href="#tm" x="141.8" y="0"/><use href="#tm" x="189.1" y="0"/><use href="#tb" x="236.4" y="0"/><use href="#ta" x="283.6" y="0"/><use href="#tc" x="330.9" y="0"/><use href="#tm" x="0" y="43.6"/><use href="#tb" x="47.3" y="43.6"/><use href="#ta" x="94.5" y="43.6"/><use href="#ta" x="141.8" y="43.6"/><use href="#ta" x="189.1" y="43.6"/><use href="#ta" x="236.4" y="43.6"/><use href="#tm" x="283.6" y="43.6"/><use href="#ta" x="330.9" y="43.6"/><use href="#tc" x="0" y="87.3"/><use href="#tm" x="47.3" y="87.3"/><use href="#ta" x="94.5" y="87.3"/><use href="#tb" x="141.8" y="87.3"/><use href="#tm" x="189.1" y="87.3"/><use href="#ta" x="236.4" y="87.3"/><use href="#tb" x="283.6" y="87.3"/><use href="#tm" x="330.9" y="87.3"/><g fill="none" stroke-width="1.8"><rect x="95" y="0.5" width="40" height="34" rx="6" stroke="#8DA6E8"/><rect x="142.3" y="44.1" width="40" height="34" rx="6" stroke="#ED6D36"/><rect x="189.6" y="44.1" width="40" height="34" rx="6" stroke="#ED6D36"/><rect x="236.9" y="44.1" width="40" height="34" rx="6" stroke="#ED6D36"/><rect x="284.1" y="87.8" width="40" height="34" rx="6" stroke="#D08BC0"/></g><g fill="#E5534B"><circle cx="174.8" cy="51.6" r="3"/><circle cx="222.1" cy="51.6" r="3"/><circle cx="269.4" cy="51.6" r="3"/></g></g>
+    <rect x="26" y="381" width="9" height="9" rx="2" fill="none" stroke="#8DA6E8" stroke-width="1.5"/><text class="t3" x="41" y="390" style="font-size:12.5px">console</text>
+    <rect x="104" y="381" width="9" height="9" rx="2" fill="none" stroke="#ED6D36" stroke-width="1.5"/><text class="t3" x="119" y="390" style="font-size:12.5px">bot on alert</text>
+    <rect x="200" y="381" width="9" height="9" rx="2" fill="none" stroke="#D08BC0" stroke-width="1.5"/><text class="t3" x="215" y="390" style="font-size:12.5px">agent via MCP</text>
+   </svg>
+   <span class="hm" aria-hidden="true"><!--@@MARK@@--></span>
+  </div>
+ </div>
+ <div class="wrap">
+  <ul class="proof">
+   <li><span class="pt">Any robot</span>Edge box or k3s cluster, x86 or ARM, Jetson or dGPU.</li>
+   <li><span class="pt">Any workload</span>Containers and Helm charts from git or your registry.</li>
+   <li><span class="pt">Any data</span>Telemetry, metrics, history, video, AI events.</li>
+   <li><span class="pt">Anywhere</span>Cloud, on-prem, or airgapped from a USB bundle.</li>
+  </ul>
+ </div>
+</section>
+
+<section class="feat f-blue" id="console" aria-labelledby="h-console">
+ <div class="wrap">
+  <div class="fh">
+   <div>
+    <p class="tag"><svg aria-hidden="true"><use href="#g-tag"/></svg>01 · The console</p>
+    <h2 id="h-console"><span class="nw">See the whole fleet.</span> <span class="nw">Prove every change.</span> <span class="nw">Reach any robot.</span></h2>
+    <p class="lede">Problems come first, each with its cause and a fix one click away. Nothing reaches a robot without a diff.</p>
+   </div>
+   <ul class="caps">
+    <li><h3>Manage</h3><p>Bootstrap robots, build fleets, roll out apps and config.</p></li>
+    <li><h3>Validate</h3><p>Diff first, then published, applied, ready per robot.</p></li>
+    <li><h3>Understand</h3><p>Dashboards, history, video, AI events, alerts, logs.</p></li>
+    <li><h3>Reach in</h3><p>One click: SSH, terminal, port-forward, a bot's desktop.</p></li>
+   </ul>
+  </div>
+  <div class="vis">
+  <figure class="frame cn" role="img" aria-label="The Teknoir console at 08:41: fleet overview, problems with their cause (gripper drift on arm-07 and arm-19 since firmware 3.8, finding F-212 by the bot fleet-analyst), a live floor plan, config status per robot including an offline robot that applies on reconnect, one-click SSH, and a firmware override for two robots ready to send">
+   <div class="cn-top">
+    <!--@@MARK@@-->
+    <span class="cn-ts">assembly-west <small>teamspace</small></span>
+    <span class="cn-q">Search robots, fleets, bots, logs <kbd>⌘K</kbd></span>
+    <span class="cn-tr"><span class="chip"><i class="dot o pulse"></i><span class="cw">fleet-analyst is working</span><u>Stop all bots</u></span><span class="av">MK</span></span>
+   </div>
+   <div class="cn-b">
+    <div class="cn-nav">
+     <span class="g">Fleet</span>
+     <span class="i on">Overview</span><span class="i">Robots<em>148</em></span><span class="i">Fleets<em>9</em></span><span class="i">Types<em>5</em></span><span class="i">Org units<em>3</em></span>
+     <span class="g">Deliver</span>
+     <span class="i">Config</span><span class="i">Apps<em>27</em></span><span class="i">Registry</span>
+     <span class="g">Observe</span>
+     <span class="i">Dashboards</span><span class="i">Video &amp; AI events</span><span class="i">Alerts<em class="w">3</em></span><span class="i">Logs</span>
+     <span class="g">Automate</span>
+     <span class="i">TeknoirBots<em>4</em></span>
+    </div>
+    <div class="cn-m">
+     <div class="cn-kp">
+      <div class="kp"><span class="kl">Robots</span><span class="kv">148</span><span class="ks"><span><i class="dot g"></i>143 healthy</span><span><i class="dot r"></i>5 need care</span></span></div>
+      <div class="kp"><span class="kl">Config · all robots</span><span class="kv">146<small> / 148 ready</small></span><span class="bar3"><i></i><i class="p"></i><i class="q"></i></span><span class="ks">published · applied · ready</span></div>
+      <div class="kp"><span class="kl">Telemetry</span><span class="kv">18.4k<small> msg/s</small></span><svg class="spk" viewBox="0 0 120 26" preserveAspectRatio="none" aria-hidden="true"><path d="M0 19L10 17L20 18L30 13L40 15L50 11L60 12L70 8L80 10L90 6L100 8L110 5L120 7V26H0Z" fill="rgba(59,97,191,.22)"/><path d="M0 19L10 17L20 18L30 13L40 15L50 11L60 12L70 8L80 10L90 6L100 8L110 5L120 7" fill="none" stroke="#8DA6E8" stroke-width="1.6"/></svg></div>
+      <div class="kp"><span class="kl">TeknoirBots</span><span class="kv">4</span><span class="ks"><span><i class="dot o"></i>3 running</span><span>1 finding open</span></span></div>
+     </div>
+     <div class="cn-r2">
+      <div class="pn">
+       <div class="ph">Problems <em>3</em><span>newest first · 08:41</span></div>
+       <div class="pi"><i class="dot r"></i><span class="t"><b>arm-07, arm-19</b>Gripper drift, +4.1 mm since firmware 3.8</span><span class="m">F-212 by fleet-analyst at 03:12 · 214 clips since 3.8 · arm-11 fixed at 08:36</span><span class="a bl">Review fix</span></div>
+       <div class="pi"><i class="dot y"></i><span class="t"><b>amr-17</b>Disk 92% on /var/lib/rancher</span><span class="m">2 pods evicted · log volume up 6× since 06:10</span><span class="a">Shell</span></div>
+       <div class="pi"><i class="dot y"></i><span class="t"><b>cam-gw-03</b>Camera 2 sends no frames</span><span class="m">Since 07:58 · PoE port 6 is down</span><span class="a">Video</span></div>
+      </div>
+      <div class="pn">
+       <div class="ph">Lyon · Hall B<span>live</span></div>
+       <svg class="plan" viewBox="0 0 300 136" aria-hidden="true">
+        <rect x="6" y="6" width="288" height="124" rx="4" fill="#171717" stroke="#333"/>
+        <g fill="#1d1d1d" stroke="#323232"><rect x="16" y="16" width="58" height="42" rx="3"/><rect x="84" y="16" width="58" height="42" rx="3"/><rect x="152" y="16" width="58" height="42" rx="3"/><rect x="220" y="16" width="64" height="42" rx="3"/></g>
+        <rect x="16" y="66" width="268" height="9" rx="2" fill="#202020" stroke="#2e2e2e"/>
+        <path d="M60 68l3 2.5-3 2.5M120 68l3 2.5-3 2.5M180 68l3 2.5-3 2.5M240 68l3 2.5-3 2.5" fill="none" stroke="#555" stroke-width="1.2"/>
+        <path d="M22 98H180Q196 98 196 106V114H280" fill="none" stroke="#2f4680" stroke-width="1.5" stroke-dasharray="3 4"/>
+        <circle cx="45" cy="34" r="4.5" fill="#E5534B"/><circle cx="45" cy="34" r="9" fill="none" stroke="#ED6D36" stroke-opacity=".6" class="pulse"/><circle cx="113" cy="34" r="4.5" fill="#4FB07A"/><circle cx="181" cy="34" r="4.5" fill="#E5534B"/><circle cx="181" cy="34" r="9" fill="none" stroke="#ED6D36" stroke-opacity=".6" class="pulse"/><circle cx="252" cy="34" r="4.5" fill="#4FB07A"/>
+        <text x="45" y="52">arm-07</text><text x="113" y="52">arm-11</text><text x="181" y="52">arm-19</text><text x="252" y="52">arm-22</text>
+        <rect x="80" y="93.5" width="12" height="9" rx="2" fill="#4FB07A"/><text class="s" x="70" y="89">amr-04</text>
+        <rect x="200" y="109.5" width="12" height="9" rx="2" fill="#E0AD1B"/><text class="s" x="216" y="124">amr-17</text>
+        <path d="M268 86L226 74V98Z" fill="#E0AD1B" fill-opacity=".08"/><rect x="268" y="81" width="12" height="10" rx="2" fill="#E0AD1B"/><text x="246" y="108">cam-gw-03</text>
+        <text class="s" x="16" y="124">conveyor 2 · 0.42 m/s</text>
+       </svg>
+      </div>
+     </div>
+     <div class="cn-r3">
+      <div class="pn tb">
+       <div class="tr th"><span>Robot</span><span class="c3">Fleet</span><span class="c2">Hardware</span><span>Config</span><span class="cpu">CPU · 1 h</span><span>Access</span></div>
+       <div class="tr"><span class="n"><i class="dot g"></i>arm-11</span><span class="c3">pickers-eu</span><span class="c2">3 nodes · Orin</span><span class="st3"><s><i></i><i></i><i></i></s>ready</span><span class="cpu"><svg viewBox="0 0 58 16" aria-hidden="true"><path d="M0 5L6 6L12 4L18 7L24 6L30 9L36 10L42 10L48 11L54 10L58 11" fill="none" stroke="#4FB07A" stroke-width="1.4"/></svg></span><span class="acc"><b class="k">SSH</b><b>Terminal</b></span></div>
+       <div class="tr"><span class="n"><i class="dot r"></i>arm-07</span><span class="c3">pickers-eu</span><span class="c2">3 nodes · Orin</span><span class="st3"><s><i></i><i></i><i></i></s>ready</span><span class="cpu"><svg viewBox="0 0 58 16" aria-hidden="true"><path d="M0 11L6 10L12 12L18 8L24 9L30 6L36 8L42 5L48 7L54 4L58 5" fill="none" stroke="#E5534B" stroke-width="1.4"/></svg></span><span class="acc"><b class="k">SSH</b><b>Terminal</b></span></div>
+       <div class="tr"><span class="n"><i class="dot y"></i>amr-17</span><span class="c3">intralogistics</span><span class="c2">1 node · RTX 4000</span><span class="st3"><s><i></i><i></i><i class="w"></i></s>applying</span><span class="cpu"><svg viewBox="0 0 58 16" aria-hidden="true"><path d="M0 12L6 11L12 12L18 10L24 11L30 7L36 4L42 3L48 4L54 3L58 3" fill="none" stroke="#E0AD1B" stroke-width="1.4"/></svg></span><span class="acc"><b class="k">SSH</b><b>Forward</b></span></div>
+       <div class="tr"><span class="n"><i class="dot"></i>amr-09</span><span class="c3">intralogistics</span><span class="c2">offline 14 min</span><span class="st3"><s><i></i><i class="z"></i><i class="z"></i></s>queued</span><span class="cpu"><svg viewBox="0 0 58 16" aria-hidden="true"><path d="M0 10L6 9L12 10L18 9L24 10L30 9L34 10" fill="none" stroke="#777" stroke-width="1.4"/></svg></span><span class="acc"><b class="x">SSH</b><b class="x">Forward</b></span></div>
+       <div class="tr sum">+ 144 more robots · all ready</div>
+      </div>
+      <div class="diff">
+       <div class="dh">Review change <span>arm-07, arm-19 · override</span></div>
+<pre>  gripper:
+<span class="del">-   firmware: 3.8</span><span class="add">+   firmware: 3.7</span>    force_limit_n: 40</pre>
+       <div class="df"><span>2 robots · reversible<br>arm-11: 0.0 mm · 41 picks, 0 failed</span><b>Send to 2</b></div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </figure>
+  </div>
+ </div>
+</section>
+
+<section class="feat f-org" id="bot" aria-labelledby="h-bot">
+ <div class="wrap">
+  <div class="fh">
+   <div>
+    <p class="tag"><svg aria-hidden="true"><use href="#g-tag"/></svg>02 · TeknoirBot</p>
+    <h2 id="h-bot">Your fleet's <span class="nw">always-on</span> engineer.</h2>
+    <p class="lede">An AI agent that knows Teknoir, on its own computer in your teamspace. It writes and runs real-time, batch, cron and event-driven jobs on live fleet data.</p>
+   </div>
+   <ul class="caps">
+    <li><h3>Training data, collected</h3><p>Frames and joint states around every failed grasp, straight to object storage.</p></li>
+    <li><h3>Behaviour, explained</h3><p>Cycle times, drift, near-misses, in plain language.</p></li>
+    <li><h3>Builds and ships</h3><p>Writes an app, pushes it to your registry, rolls it out one robot first.</p></li>
+    <li><h3>Under control</h3><p>Its creator's rights or less, a spend cap, full audit. Stop one bot or all.</p></li>
+   </ul>
+  </div>
+  <div class="vis">
+  <figure class="frame bt" role="img" aria-label="TeknoirBot fleet-analyst, agent level Act as me, model spend $4.10 of a $40 daily limit, with Open desktop and Stop controls. It runs real-time, event-driven, cron and batch jobs on MQTT telemetry, events, history, metrics and video; it saves failed-grasp clips to object storage, raises finding F-212 on the dashboard and stages an app rollout on one picker arm; every action is in its audit trail, done for maria and scoped to one fleet and one bucket">
+   <div class="bt-top">
+    <span class="bt-av"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M1 7H7L12 2H19M1 13H8L13 8H19" fill="none" stroke="#ED6D36" stroke-width="2.6" stroke-linejoin="round"/><path d="M1 18H19" stroke="#ED6D36" stroke-width="2.6" stroke-opacity=".45"/></svg></span>
+    <span class="bt-n"><b>fleet-analyst</b><small>TeknoirBot · 16 vCPU · 64 GB · 1 GPU · up 41 days</small></span>
+    <span class="seg"><span class="lb">Agent</span><span>Off</span><span>Read only</span><span class="on">Act as me</span></span>
+    <span class="spend">Model spend today · $4.10 of $40<i><s></s></i></span>
+    <span class="grow"></span>
+    <span class="bb dk"><svg viewBox="0 0 60 34" aria-hidden="true"><rect width="60" height="34" fill="#1a1a1a"/><rect width="60" height="5" fill="#2a2a2a"/><rect x="3.5" y="8.5" width="31" height="22" rx="1.5" fill="#121212" stroke="#3a3a3a"/><path d="M7 13.5h17M7 18h22M7 22.5h12" stroke="#ffb08c" stroke-width="1.6"/><rect x="37.5" y="8.5" width="19" height="13" rx="1.5" fill="#202020" stroke="#3a3a3a"/><path d="M40 18.5l4-4 3 2.5 5-5" fill="none" stroke="#ED6D36" stroke-width="1.2"/><rect x="37.5" y="24" width="19" height="6.5" rx="1.5" fill="#202020" stroke="#3a3a3a"/></svg>Open desktop</span>
+    <span class="bb stop"><i></i>Stop</span>
+   </div>
+   <div class="pipe">
+    <div class="col src">
+     <div class="ch">Live fleet data</div>
+     <div class="nd act"><b>MQTT telemetry</b><small>robots/+/joints · 18.4k msg/s</small></div>
+     <div class="nd"><b>Events</b><small>grasp.failed · estop · near_miss</small></div>
+     <div class="nd"><b>Historian</b><small>90 days of history</small></div>
+     <div class="nd"><b>Prometheus</b><small>fleet metrics · PromQL</small></div>
+     <div class="nd"><b>Video &amp; AI events</b><small>Observatory · 212 cameras</small></div>
+    </div>
+    <div class="bus"></div>
+    <div class="col jobs">
+     <div class="ch">Jobs <span>4 running</span></div>
+     <div class="jb act"><span class="r1"><span class="md rt"><i class="dot o pulse"></i>Real-time</span><code>grasp-watch</code></span><small>Gripper force and joint states, 3 fleets</small><span class="jm">2.1k msg/s <svg viewBox="0 0 72 14" aria-hidden="true"><path d="M0 9L6 7L12 8L18 4L24 6L30 3L36 7L42 5L48 8L54 4L60 6L66 3L72 5" fill="none" stroke="#ED6D36" stroke-width="1.4"/></svg></span></div>
+     <div class="jb"><span class="r1"><span class="md ev"><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M6 0L1 7h4l-1 5 5-7H5z" fill="#ED6D36"/></svg>Event → agent</span><code>on grasp.failed</code></span><span class="steps"><b>read joints</b><b>compare fleet</b><b>save ±5 s</b><b class="a">raise finding</b></span><span class="jm">03:12 · arm-11 · clip 031207 saved</span></div>
+     <div class="jb"><span class="r1"><span class="md cr"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4" fill="none" stroke="#ED6D36" stroke-width="1.4"/><path d="M5 2.6V5l1.8 1.2" fill="none" stroke="#ED6D36" stroke-width="1.3" stroke-linecap="round"/></svg>Cron</span><code>0 2 * * * drift-report</code></span><small>Drift and cycle times per robot</small><span class="jm">02:04 · flagged 3 arms</span></div>
+     <div class="jb"><span class="r1"><span class="md ba"><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 2h8M1 5h8M1 8h8" stroke="#ED6D36" stroke-width="1.6"/></svg>Batch</span><code>cycle-times --days 90</code></span><small>Across all fleets, from the historian</small><span class="jm"><span class="prog"><s></s></span>64%</span></div>
+    </div>
+    <div class="bus"></div>
+    <div class="col out">
+     <div class="ch">Results</div>
+     <div class="nd act"><b>Object storage</b><small>s3://training/grasp-fail/</small>
+      <span class="fls"><span>arm-11/031207/frames.mp4<em>38 MB</em></span><span>arm-11/031207/joints.parquet<em>1.2 MB</em></span><span>arm-07/022944/frames.mp4<em>41 MB</em></span></span>
+      <span class="fm"><b>+1,284</b> failed-grasp clips this week, tagged by robot and firmware</span></div>
+     <div class="nd ins"><b>Finding F-212 on the dashboard</b><small>Gripper drift +4.1 mm on arm-07, -11 and -19 since firmware 3.8</small></div>
+     <div class="nd"><b>Rollout, staged</b><small>grasp-filter:1.4 → registry · dry run on pickers-eu · live on arm-22 only, reversible</small></div>
+    </div>
+   </div>
+   <div class="audit"><span class="al">Audit</span><span>03:12:07 read robots/arm-11/gripper</span><span>03:12:09 wrote s3://training/grasp-fail/arm-11/</span><span>03:12:14 raised finding F-212</span><span class="as">fleet-analyst for maria · Act as me, scoped to pickers-eu + s3://training/</span></div>
+  </figure>
+  </div>
+ </div>
+</section>
+
+<section class="feat f-pur" id="cli" aria-labelledby="h-cli">
+ <div class="wrap">
+  <div class="fh">
+   <div>
+    <p class="tag"><svg aria-hidden="true"><use href="#g-tag"/></svg>03 · tnctl + MCP</p>
+    <h2 id="h-cli">The whole fleet in your terminal. And in your coding agent.</h2>
+    <p class="lede"><code>tnctl</code> scripts everything the console does. <code>tnctl agent install</code> gives Claude Code, Codex or any agent the fleet through MCP: reads within your rights, changes through tnctl.</p>
+   </div>
+   <ul class="caps">
+    <li><h3>One binary, one login</h3><p>macOS, Linux, Windows. Robots, config, bots, logs, live MQTT.</p></li>
+    <li><h3>Safe changes</h3><p><code>--dry-run</code>, then <code>--wait=ready</code> until every robot confirms.</p></li>
+    <li><h3>Ansible inventory</h3><p>Playbooks on the live fleet; SSH, port-forward, SOCKS.</p></li>
+    <li><h3>Laptop to bot</h3><p>A script you write on your laptop runs unchanged on a TeknoirBot, 24/7.</p></li>
+   </ul>
+  </div>
+  <div class="vis">
+  <div class="duo">
+   <figure class="frame term" role="img" aria-label="A terminal session at 08:30: tnctl lists three arms with gripper drift on firmware 3.8, streams their live MQTT, pins firmware 3.7 on arm-11 with a dry run, waits until it is ready and the gripper has re-homed to zero drift, and opens SSH on arm-11">
+    <div class="wbar"><i></i><i></i><i></i><span>maria@laptop: ~/pickers</span></div>
+<pre><span class="p">$</span> <span class="c">tnctl robots fleet=pickers-eu --problems</span>
+<span class="h">NAME     <span class="xm">TYPE     </span>FIRMWARE  PROBLEM</span>
+arm-07   <span class="xm">ur-cell  </span>3.8       <span class="w">gripper drift +4.1 mm</span>
+arm-11   <span class="xm">ur-cell  </span>3.8       <span class="w">gripper drift +4.1 mm</span>
+arm-19   <span class="xm">ur-cell  </span>3.8       <span class="w">gripper drift +3.9 mm</span>
+<span class="p">$</span> <span class="c">tnctl mqtt sub 'robots/arm-11/gripper/#'</span>
+<span class="o">gripper/state</span>  drift_mm=4.12  force_n=38.7
+<span class="o">gripper/state</span>  drift_mm=4.14  force_n=38.9
+<span class="p">$</span> <span class="c">tnctl config override arm-11 \</span>
+<span class="c">    gripper.firmware=3.7 --dry-run</span>
+<span class="y">~ gripper.firmware</span>   3.8 → 3.7<span class="xm">   <span class="o">layer override</span></span>
+<span class="o">1 robot · 1 change · nothing sent</span>
+<span class="p">$</span> <span class="c">tnctl config override arm-11 \</span>
+<span class="c">    gripper.firmware=3.7 --wait=ready</span>
+published <span class="k">1/1 ✓</span>  applied <span class="k">1/1 ✓</span>  ready <span class="k">1/1 ✓</span><span class="xm">  <span class="o">38 s</span></span>
+<span class="o">gripper re-homed</span>  drift_mm=<span class="k">0.00</span>
+<span class="p">$</span> <span class="c">tnctl ssh arm-11</span>
+<span class="o">maria@arm-11:~$</span> <span class="cur"></span></pre>
+   </figure>
+   <figure class="frame agent" role="img" aria-label="A coding agent using the Teknoir MCP server: it reads problems, PromQL, live MQTT and config, confirms the bot's finding F-212, proposes pinning firmware 3.7 on arm-11 first with a tnctl dry run, and applies it with tnctl after Maria approves">
+    <div class="wbar"><span class="w0">Coding agent · ~/pickers</span><span class="st">reads as maria · writes via tnctl</span><span class="mcp"><i class="dot g"></i>MCP · teknoir</span></div>
+    <div class="ag">
+     <div class="you">Why are three arms in pickers-eu dropping grasps?</div>
+     <div class="tc"><i></i><b>teknoir.list_problems</b><span>fleet=pickers-eu</span><em>F-212 +2</em></div>
+     <div class="tc"><i></i><b>teknoir.promql</b><span>rate(grasp_fail_total[6d]) by robot</span><em>3 series</em></div>
+     <div class="tc"><i></i><b>teknoir.mqtt_sample</b><span>robots/arm-11/gripper</span><em>20 msgs</em></div>
+     <div class="tc"><i></i><b>teknoir.config_get</b><span>robot/arm-11 gripper</span><em>firmware 3.8</em></div>
+     <div class="say">The bot's finding <b>F-212</b> holds: only <b class="nw">arm-07, arm-11</b> and <b class="nw">arm-19</b> run gripper firmware 3.8; their zero point drifts about 0.7 mm a day since the update. Pin 3.7 on those three, <span class="nw">arm-11</span> first. Dry run:</div>
+     <div class="tc tn"><i></i><b>tnctl config override <span class="nw">--dry-run</span></b><span>arm-11 gripper.firmware=3.7</span><em>1 robot</em></div>
+     <div class="ask">Apply to arm-11 and wait for ready? <s>Show diff</s><b>Apply with tnctl</b></div>
+     <div class="tc tn"><i></i><b>tnctl config override <span class="nw">--wait=ready</span></b><span>arm-11</span><em>ready 1/1</em></div>
+     <div class="prompt">Ask about your fleet…</div>
+    </div>
+   </figure>
+  </div>
+  </div>
+ </div>
+</section>
+
+<section class="fit" id="fit" aria-labelledby="h-fit">
+ <div class="wrap">
+  <div class="fh">
+   <div>
+    <p class="tag tg-y"><svg aria-hidden="true"><use href="#g-tag"/></svg>One fix, three doors</p>
+    <h2 id="h-fit"><span class="nw">Found at 03:12.</span> <span class="nwd">Fixed on all three arms by 08:52.</span></h2>
+   </div>
+   <p class="lede">A bot, Maria's coding agent and her team: one finding, one thread, not three tickets in three tools.</p>
+  </div>
+  <div class="metro" aria-hidden="true">
+   <svg viewBox="0 0 1200 104" preserveAspectRatio="none">
+    <path class="ln" d="M0 32H1150" stroke="#ED6D36"/><path class="ln" d="M0 62H1150" stroke="#9B357D"/><path class="ln" d="M0 92H1150" stroke="#3B61BF"/>
+    <path d="M10 32H232" stroke="#ED6D36"/><path d="M232 32L262 62H532" stroke="#9B357D"/><path d="M532 62L562 92H832" stroke="#3B61BF"/><path class="end" d="M832 92L892 32H1154" stroke="#ED6D36"/>
+   </svg>
+   <i class="mn" style="left:0;top:22px;--c:var(--org)"></i><i class="mn" style="left:25%;top:52px;--c:var(--pur)"></i><i class="mn" style="left:50%;top:82px;--c:var(--blue)"></i><i class="mn" style="left:75%;top:22px;--c:var(--org)"></i>
+   <span class="ml" style="left:30%;top:15px;color:var(--ort)">TeknoirBot</span><span class="ml" style="left:4%;top:45px;color:var(--put)">tnctl + MCP</span><span class="ml" style="left:4%;top:75px;color:var(--blt)">Console</span>
+   <span class="mm"><!--@@MARK@@--></span>
+  </div>
+  <ol class="story">
+   <li class="sp"><p class="when"><time>03:12</time>TeknoirBot</p><h3>Spots it</h3><p>A failed grasp wakes the agent. It saves the clip, links it to the 02:04 drift report, raises F-212.</p>
+<pre class="mini" aria-hidden="true"><span class="o">02:04</span> drift-report: <span class="r">3 arms</span>
+<span class="o">03:12</span> grasp.failed · arm-11
+<span class="o">→</span> clip 031207 to s3://training/
+<span class="o">→</span> F-212 · 214 clips since 3.8</pre><p class="sh" aria-hidden="true"><span class="f">F-212 raised</span><span>arm-07/11/19</span><span>as maria</span></p></li>
+   <li class="sp pu"><p class="when"><time>08:30</time>Coding agent + tnctl</p><h3>Explains it</h3><p>Maria's agent traces it through MCP to firmware 3.8. tnctl pins 3.7 on arm-11.</p>
+<pre class="mini" aria-hidden="true"><span class="p">$</span> tnctl config override arm-11 \
+    gripper.firmware=3.7 --dry-run
+<span class="o">1 robot · nothing sent</span>
+<span class="o">--wait=ready →</span> <span class="k">ready ✓ · re-homed</span></pre><p class="sh" aria-hidden="true"><span class="f">F-212 traced</span><span>arm-07/11/19</span><span>as maria</span></p></li>
+   <li class="sp bl"><p class="when"><time>08:41</time>Console</p><h3>Proves it</h3><p>arm-11 reads 0.0 mm again and picks cleanly. The team sends the reviewed diff to the other two.</p>
+<pre class="mini" aria-hidden="true">arm-11 <span class="k">0.0 mm ✓</span> <span class="o">→</span> arm-07, arm-19
+published  <span class="k">3/3 ✓</span>
+applied    <span class="k">3/3 ✓</span>
+ready      <span class="k">3/3 ✓</span></pre><p class="sh" aria-hidden="true"><span class="f">F-212 fix 3/3</span><span>arm-07/11/19</span><span>as mk</span></p></li>
+   <li class="sp"><p class="when"><time>08:52</time>TeknoirBot</p><h3>Confirms it</h3><p>All three read 0.0 mm. The bot runs Maria's laptop drift check, unchanged, hourly.</p>
+<pre class="mini" aria-hidden="true">arm-07/11/19  <span class="k">0.0 mm · re-homed</span>
+grasp.failed  <span class="k">0 since 08:41</span>
+<span class="o">+ hourly</span>  ~/pickers/drift-check
+<span class="o">F-212 on watch · closes at 24 h</span></pre><p class="sh" aria-hidden="true"><span class="f">F-212 on watch</span><span>arm-07/11/19</span><span>as maria</span></p></li>
+  </ol>
+  <div class="ground" role="list" aria-label="Shared by all three doors">
+   <div class="gl" aria-hidden="true"><span><!--@@MARK@@--></span><span>Shared by all three doors</span></div>
+   <div class="gi" role="listitem"><b>Same robots</b><span>Staged in tnctl, sent from the console, kept in git.</span></div>
+   <div class="gi" role="listitem"><b>Same data</b><span>03:12 clips beside the 08:41 diff.</span></div>
+   <div class="gi" role="listitem"><b>Same rights</b><span>Bot and agent acted as Maria, never beyond.</span></div>
+   <div class="gi" role="listitem"><b>Same audit trail</b><span>Bot, agent and team, logged under F-212.</span></div>
+  </div>
+ </div>
+</section>
+
+<section class="found" aria-labelledby="h-found">
+ <div class="wrap">
+  <h2 id="h-found" class="tag"><svg aria-hidden="true"><use href="#g-tag"/></svg>Underneath every door</h2>
+  <ul class="fg">
+   <li><h3>Teamspaces</h3><p>Each tenant's own people, robots, data.</p></li>
+   <li><h3>One identity</h3><p>Single sign-on, bots included.</p></li>
+   <li><h3>Layered config in git</h3><ol class="layers" aria-label="Config layers, lowest first"><li>platform</li><li>type</li><li>fleet</li><li>robot</li><li>local</li><li>override</li></ol><p>Diffed, tracked, reversible.</p></li>
+   <li><h3>Zero-touch access</h3><p>WireGuard to every robot, no open ports.</p></li>
+  </ul>
+ </div>
+</section>
+
+<section class="close" id="start" aria-labelledby="h-close">
+ <div class="wrap">
+  <span class="cm" aria-hidden="true"><!--@@MARK@@--></span>
+  <h2 id="h-close">The most versatile way to build and run a robot fleet.</h2>
+  <p>Edge box or k3s cluster. Cloud or airgapped. Console, bot or terminal. One fleet, one set of rights.</p>
+  <p class="cta">Start with one robot: <code>tnctl bootstrap</code> · <span class="url">teknoir.ai</span></p>
+ </div>
+</section>
+</main>
+
+<footer>
+ <div class="wrap"><!--@@LOGO@@--></div>
+</footer>
+</body>
+</html>

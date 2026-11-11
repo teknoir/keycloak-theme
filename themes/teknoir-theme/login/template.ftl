@@ -57,6 +57,9 @@
             <link href="${url.resourcesPath}/${style}" rel="stylesheet" />
         </#list>
     </#if>
+    <#if tnLanding>
+        <link href="${url.resourcesPath}/css/showcase.css" rel="stylesheet" />
+    </#if>
     <script type="importmap">
         {
             "imports": {
@@ -144,11 +147,18 @@
 </head>
 
 <body id="keycloak-bg" class="${properties.kcBodyClass!} tn-body<#if tnLanding> tn-landing</#if>" data-page-id="login-${pageId}">
+<#if tnLanding><div id="tn-top" aria-hidden="true"></div></#if>
 <div class="tn-backdrop" aria-hidden="true"></div>
 <header id="kc-header" class="pf-v5-c-login__header tn-topbar">
   <div id="kc-header-wrapper" class="pf-v5-c-brand tn-brand">
     <img class="tn-logo" src="${url.resourcesPath}/img/teknoir-logo.svg" alt="Teknoir" width="168" height="26">
   </div>
+  <#if tnLanding>
+  <nav class="tn-nav" aria-label="${msg("tnNavLabel")}">
+    <a href="#console"><span class="tn-nav-n">01</span>${msg("tnDoorConsole")}</a><a href="#bot"><span class="tn-nav-n">02</span>${msg("tnDoorBot")}</a><a href="#cli"><span class="tn-nav-n">03</span>${msg("tnDoorCli")}</a><a href="#fit">${msg("tnNavFix")}</a>
+  </nav>
+  <a class="tn-top-signin" href="#tn-signin">${msg("doLogIn")}</a>
+  </#if>
 </header>
 <div class="tn-shell<#if tnLanding> tn-shell--landing</#if>"<#if tnLanding && tnDoor?has_content> data-door="${tnDoor}"</#if>>
   <#if tnLanding>
@@ -170,10 +180,10 @@
     <svg class="tn-join-tall" viewBox="0 0 300 72" preserveAspectRatio="none">
       <g class="tn-rails"><path class="tn-rail-console" d="M50 0V4L140 40H146" stroke="#3B61BF"/><path class="tn-rail-bot" d="M150 0V40" stroke="#ED6D36"/><path class="tn-rail-cli" d="M250 0V4L160 40H154" stroke="#9B357D"/><path d="M150 52V72" stroke="#E0AD1B"/></g>
     </svg>
-    <img class="tn-mark" src="${url.resourcesPath}/img/teknoir-mark.svg" alt="" width="44" height="44">
+    <img class="tn-join-mark" src="${url.resourcesPath}/img/teknoir-mark.svg" alt="" width="44" height="44">
   </div>
   </#if>
-  <div class="${properties.kcLogin!}">
+  <div class="${properties.kcLogin!}"<#if tnLanding> id="tn-signin"</#if>>
     <div class="${properties.kcLoginContainer!}">
       <main class="${properties.kcLoginMain!}">
         <#if tnLanding><p class="tn-card-kicker">${msg("tnCardKicker")}</p></#if>
@@ -312,6 +322,36 @@
   </ul>
   </#if>
 </div>
+<#if tnLanding>
+<#include "tn-showcase.ftl">
+<script>
+  // The sign-in button in the top bar shows once the card is out of view; it and the one at the end
+  // of the page bring the card back and focus the first empty field.
+  (function () {
+    var card = document.getElementById("tn-signin"), top = document.getElementById("tn-top");
+    if (!card || !top || !("IntersectionObserver" in window)) return;
+    var body = document.body;
+    body.classList.add("tn-js");
+    // tn-scrolled: the bar fills in as soon as the page moves; tn-card-away: the bar's Sign in shows.
+    new IntersectionObserver(function (entries) {
+      body.classList.toggle("tn-scrolled", !entries[0].isIntersecting);
+    }).observe(top);
+    new IntersectionObserver(function (entries) {
+      body.classList.toggle("tn-card-away", !entries[0].isIntersecting);
+    }).observe(card);
+    var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.querySelectorAll('a[href="#tn-signin"]').forEach(function (a) {
+      a.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        card.scrollIntoView({ behavior: still ? "auto" : "smooth", block: "center" });
+        var u = document.getElementById("username"), pw = document.getElementById("password");
+        var f = (u && !u.value) ? u : (pw || u);
+        if (f) f.focus({ preventScroll: true });
+      });
+    });
+  })();
+</script>
+</#if>
 </body>
 </html>
 </#macro>

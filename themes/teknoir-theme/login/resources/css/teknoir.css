@@ -322,6 +322,16 @@ html,
   mask-image: radial-gradient(900px 560px at 68% 42%, #000, transparent 75%);
 }
 
+/* On the landing the page goes on into the showcase: the glow and grid
+   belong to the hero only and fade out below it. */
+
+.tn-landing .tn-backdrop {
+  position: absolute;
+  height: max(100vh, 900px);
+  -webkit-mask-image: linear-gradient(#000 70%, transparent);
+  mask-image: linear-gradient(#000 70%, transparent);
+}
+
 /* Card-only pages: one quiet glow behind the card. */
 
 .tn-body:not(.tn-landing) .tn-backdrop::before {
@@ -353,6 +363,165 @@ html,
   margin: 0 auto;
 }
 
+/* Landing: the top bar stays while the showcase scrolls by; full-bleed
+   background through clip-path, content aligned with the hero. */
+
+/* Keycloak's base sets body to 100% height; a sticky bar cannot leave its
+   containing block, so on the long landing the body grows with its content. */
+
+.tn-body.tn-landing {
+  height: auto;
+}
+
+.tn-landing .tn-topbar,
+.tn-landing .pf-v5-c-login__header.tn-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  gap: 28px;
+}
+
+/* The bar's background runs edge to edge while its content stays aligned
+   with the hero; a hairline shows once the page has scrolled. */
+
+.tn-landing .tn-topbar::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background: rgba(16, 16, 16, .82);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  backdrop-filter: blur(12px) saturate(140%);
+  border-bottom: 1px solid transparent;
+}
+
+.tn-landing.tn-scrolled .tn-topbar::before {
+  border-bottom-color: var(--tn-rule);
+}
+
+/* At the very top the hero's glow shows through; the bar fills in as soon
+   as the page scrolls, so nothing slides under a see-through logo. */
+
+#tn-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.tn-landing.tn-js:not(.tn-scrolled) .tn-topbar::before {
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.tn-nav {
+  display: flex;
+  gap: 28px;
+  margin-left: auto;
+  font-size: 15px;
+}
+
+/* The links are a tour of the page below, numbered like its sections, so
+   "Console" does not read as the way into the console. */
+
+.tn-nav a {
+  color: var(--tn-ash);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.tn-nav-n {
+  margin-right: 6px;
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  color: var(--tn-yellow);
+}
+
+.tn-nav a:hover {
+  color: var(--tn-bone);
+}
+
+/* Every Sign in looks like the card's button: the same blue, as a pill. */
+
+.tn-top-signin,
+.tn-body .tn-sc .close .tn-sc-signin .btn {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: var(--tn-accent);
+  color: #fff;
+  font-size: 14.5px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: max-width .2s ease, opacity .2s ease, padding .2s ease, margin .2s ease;
+  max-width: 160px;
+}
+
+.tn-top-signin:hover,
+.tn-body .tn-sc .close .tn-sc-signin .btn:hover {
+  background: var(--tn-accent-hover);
+  color: #fff;
+  filter: none;
+}
+
+/* With script, the bar's button shows only once the card has scrolled away;
+   until then it takes no room, so the nav ends flush with the card. */
+
+.tn-js:not(.tn-card-away) .tn-top-signin {
+  max-width: 0;
+  padding: 0;
+  margin-left: -28px;
+  opacity: 0;
+  visibility: hidden;
+}
+
+html:has(.tn-landing) {
+  scroll-behavior: smooth;
+  scroll-padding-top: 79px;
+}
+
+/* The showcase follows the hero; its close ends with a way back to the card. */
+
+/* The body is the page's flex column; the showcase must not shrink into
+   it and scroll on its own (its body rule brings overflow-x: hidden). */
+
+.tn-body .tn-sc {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  overflow: visible;
+  overflow-x: clip;
+  background: transparent;
+}
+
+/* One column for the whole page: the showcase's 1240px wrap widens to the
+   hero's 1320px. */
+
+.tn-body .tn-sc .wrap {
+  max-width: 1320px;
+}
+
+.tn-body .tn-sc .close .tn-sc-signin {
+  margin: 32px auto 0;
+}
+
+.tn-body .tn-sc .close .tn-sc-signin .btn {
+  height: 46px;
+  padding: 0 26px;
+  font-size: 16px;
+}
+
 .tn-body .pf-v5-c-login__header {
   display: flex;
   padding: 0;
@@ -378,7 +547,7 @@ html,
   padding: 0;
 }
 
-.tn-logo {
+.tn-topbar .tn-logo {
   height: 28px;
   width: auto;
   display: block;
@@ -748,7 +917,7 @@ html,
   to { stroke-dashoffset: 0; }
 }
 
-.tn-mark {
+.tn-join-mark {
   position: absolute;
   left: 58px;
   top: 74px;
@@ -847,14 +1016,28 @@ html,
 
 /* Narrow: headline, the doors in a row, the rails down into the card. */
 
+@media (max-width: 899px) {
+  .tn-nav {
+    display: none;
+  }
+
+  .tn-top-signin {
+    margin-left: auto;
+  }
+}
+
 @media (max-width: 759px) {
+  html:has(.tn-landing) {
+    scroll-padding-top: 59px;
+  }
+
   .tn-topbar,
   .tn-body .pf-v5-c-login__header.tn-topbar {
     height: 60px;
     padding: 0 18px;
   }
 
-  .tn-logo {
+  .tn-topbar .tn-logo {
     height: 22px;
   }
 
@@ -931,7 +1114,7 @@ html,
     vector-effect: non-scaling-stroke;
   }
 
-  .tn-mark {
+  .tn-join-mark {
     left: 50%;
     top: 24px;
     width: 32px;
@@ -963,7 +1146,7 @@ html,
   .tn-head { margin-bottom: 14px; }
   .tn-join,
   .tn-join .tn-join-tall { height: 52px; }
-  .tn-mark { top: 12px; }
+  .tn-join-mark { top: 12px; }
 }
 
 @media (max-width: 479px) {
@@ -1030,5 +1213,9 @@ html,
 
   .tn-flow {
     display: none;
+  }
+
+  html:has(.tn-landing) {
+    scroll-behavior: auto;
   }
 }
