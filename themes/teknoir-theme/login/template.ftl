@@ -26,6 +26,8 @@
 <#local tnClientId = (client.clientId)!"">
 <#local tnPage = (pageId)!"">
 <#local tnLanding = (tnPage == "login" || tnPage == "login-username") && tnClientId != "security-admin-console">
+<#-- The door the user is entering through: the console (oauth2-proxy client) or tnctl. Others get no door. -->
+<#local tnDoor = (tnClientId == "teknoir")?then("console", (tnClientId == "teknoir-cli")?then("cli", ""))>
 <#local tnTitles = {"login-reset-password": "emailForgotTitle", "login-config-totp": "loginTotpTitle", "login-update-password": "updatePasswordTitle", "logout-confirm": "logoutConfirmTitle", "error": "errorTitle", "login-oauth2-device-verify-user-code": "oauth2DeviceVerificationTitle"}>
 <!DOCTYPE html>
 <html class="${properties.kcHtmlClass!}" lang="${lang}"<#if realm.internationalizationEnabled> dir="${(locale.rtl)?then('rtl','ltr')}"</#if>>
@@ -34,7 +36,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="color-scheme" content="dark">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#101010">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <#if properties.meta?has_content>
@@ -142,41 +144,43 @@
 </head>
 
 <body id="keycloak-bg" class="${properties.kcBodyClass!} tn-body<#if tnLanding> tn-landing</#if>" data-page-id="login-${pageId}">
-<div class="tn-backdrop" aria-hidden="true">
-  <div class="tn-glow"></div>
-</div>
+<div class="tn-backdrop" aria-hidden="true"></div>
 <header id="kc-header" class="pf-v5-c-login__header tn-topbar">
   <div id="kc-header-wrapper" class="pf-v5-c-brand tn-brand">
     <img class="tn-logo" src="${url.resourcesPath}/img/teknoir-logo.svg" alt="Teknoir" width="168" height="26">
   </div>
 </header>
-<div class="tn-shell<#if tnLanding> tn-shell--landing</#if>">
+<div class="tn-shell<#if tnLanding> tn-shell--landing</#if>"<#if tnLanding && tnDoor?has_content> data-door="${tnDoor}"</#if>>
   <#if tnLanding>
-  <section class="tn-story" aria-labelledby="tn-headline">
-    <h1 id="tn-headline" class="tn-headline">${msg("tnHeadline1")}<br>${msg("tnHeadline2")}</h1>
-    <p class="tn-lede">${msg("tnLede")}</p>
-    <dl class="tn-verbs">
-      <div class="tn-verb tn-verb--manage">
-        <dt class="tn-verb-name"><span class="tn-verb-mark" aria-hidden="true"></span>${msg("tnManageKicker")}</dt>
-        <dd class="tn-verb-text">${msg("tnManageText")}</dd>
-      </div>
-      <div class="tn-verb tn-verb--access">
-        <dt class="tn-verb-name"><span class="tn-verb-mark" aria-hidden="true"></span>${msg("tnAccessKicker")}</dt>
-        <dd class="tn-verb-text">${msg("tnAccessText")} <code class="tn-cmd">${msg("tnAccessProof")}</code></dd>
-      </div>
-      <div class="tn-verb tn-verb--develop">
-        <dt class="tn-verb-name"><span class="tn-verb-mark" aria-hidden="true"></span>${msg("tnDevelopKicker")}</dt>
-        <dd class="tn-verb-text">${msg("tnDevelopText")}</dd>
-      </div>
-    </dl>
-  </section>
+  <div class="tn-head">
+    <p class="tn-eyebrow">${msg("tnEyebrow")}</p>
+    <h1 id="tn-headline" class="tn-headline">${msg("tnHeadline1")}<br>${msg("tnHeadline2")}<br><span class="tn-gr">${msg("tnHeadline3")}</span></h1>
+  </div>
+  <p class="tn-sub">${kcSanitize(msg("tnSub"))?no_esc}</p>
+  <ul class="tn-doors" aria-label="${msg("tnDoorsLabel")}">
+    <li class="tn-door tn-door--console<#if tnDoor == "console"> tn-door--active</#if>"<#if tnDoor == "console"> aria-current="true"</#if>><span class="tn-door-name">${msg("tnDoorConsole")}</span><span class="tn-door-text">${msg("tnDoorConsoleText")}</span><svg class="tn-door-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10H22"/></svg></li>
+    <li class="tn-door tn-door--bot<#if tnDoor == "bot"> tn-door--active</#if>"<#if tnDoor == "bot"> aria-current="true"</#if>><span class="tn-door-name">${msg("tnDoorBot")}</span><span class="tn-door-text">${msg("tnDoorBotText")}</span><svg class="tn-door-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7V12L15.5 14"/></svg></li>
+    <li class="tn-door tn-door--cli<#if tnDoor == "cli"> tn-door--active</#if>"<#if tnDoor == "cli"> aria-current="true"</#if>><span class="tn-door-name">${msg("tnDoorCli")}</span><span class="tn-door-text">${msg("tnDoorCliText")}</span><svg class="tn-door-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6L10 12L4 18M13 18H21"/></svg></li>
+  </ul>
+  <div class="tn-join" aria-hidden="true">
+    <svg class="tn-join-wide" viewBox="0 0 132 192" width="132" height="192">
+      <g class="tn-rails"><path class="tn-rail-console" d="M0 28H6L64 86H80" stroke="#3B61BF"/><path class="tn-rail-bot" d="M0 96H80" stroke="#ED6D36"/><path class="tn-rail-cli" d="M0 164H6L64 106H80" stroke="#9B357D"/><path d="M100 96H132" stroke="#E0AD1B"/></g>
+      <g class="tn-flow"><path class="tn-rail-console" pathLength="100" d="M0 28H6L64 86H80"/><path class="tn-rail-bot b" pathLength="100" d="M0 96H80"/><path class="tn-rail-cli c" pathLength="100" d="M0 164H6L64 106H80"/><path class="y" pathLength="100" d="M100 96H132"/></g>
+    </svg>
+    <svg class="tn-join-tall" viewBox="0 0 300 72" preserveAspectRatio="none">
+      <g class="tn-rails"><path class="tn-rail-console" d="M50 0V4L140 40H146" stroke="#3B61BF"/><path class="tn-rail-bot" d="M150 0V40" stroke="#ED6D36"/><path class="tn-rail-cli" d="M250 0V4L160 40H154" stroke="#9B357D"/><path d="M150 52V72" stroke="#E0AD1B"/></g>
+    </svg>
+    <img class="tn-mark" src="${url.resourcesPath}/img/teknoir-mark.svg" alt="" width="44" height="44">
+  </div>
   </#if>
   <div class="${properties.kcLogin!}">
     <div class="${properties.kcLoginContainer!}">
       <main class="${properties.kcLoginMain!}">
+        <#if tnLanding><p class="tn-card-kicker">${msg("tnCardKicker")}</p></#if>
         <div class="${properties.kcLoginMainHeader!}">
           <#if tnLanding>
-          <h2 class="${properties.kcLoginMainTitle!} tn-card-title" id="kc-page-title"><#nested "header"></h2>
+          <h2 class="${properties.kcLoginMainTitle!} tn-card-title" id="kc-page-title"><#if tnDoor == "console">${msg("tnTitleConsole")}<#elseif tnDoor == "cli">${msg("tnTitleCli")}<#else><#nested "header"></#if></h2>
+          <#if tnDoor == "cli"><p class="tn-card-note">${msg("tnCliReturn")}</p></#if>
           <#else>
           <h1 class="${properties.kcLoginMainTitle!}" id="kc-page-title"><#nested "header"></h1>
           </#if>
@@ -293,23 +297,18 @@
           <div class="${properties.kcLoginMainFooter!}">
               <@loginFooter.content/>
           </div>
-          <#if tnLanding && !(realm.registrationAllowed!false)>
-          <p class="tn-card-help">${msg("tnNoAccount")}</p>
+          <#if tnLanding>
+          <p class="tn-card-help">${msg("tnOneAccount")}<#if !(realm.registrationAllowed!false)><span class="tn-card-help-sub">${msg("tnNoAccount")}</span></#if></p>
           </#if>
       </main>
     </div>
   </div>
-</div>
-<div class="tn-floor" aria-hidden="true">
-  <div class="tn-grid"></div>
-  <div class="tn-horizon-line"></div>
   <#if tnLanding>
-  <div class="tn-sun"></div>
-  <ul class="tn-fleet">
-    <li class="tn-bot tn-bot--ok tn-bot--1"><span class="tn-bot-glyph"></span><span class="tn-bot-name">amr-01</span></li>
-    <li class="tn-bot tn-bot--warn tn-bot--2"><span class="tn-bot-glyph"></span><span class="tn-bot-name">amr-02</span></li>
-    <li class="tn-bot tn-bot--ok tn-bot--3"><span class="tn-bot-glyph"></span><span class="tn-bot-name">amr-03</span></li>
-    <li class="tn-bot tn-bot--ok tn-bot--4"><span class="tn-bot-glyph"></span><span class="tn-bot-name">station-01</span></li>
+  <ul class="tn-proof">
+    <li><span class="tn-proof-t">${msg("tnProof1")}</span>${msg("tnProof1Text")}</li>
+    <li><span class="tn-proof-t">${msg("tnProof2")}</span>${msg("tnProof2Text")}</li>
+    <li><span class="tn-proof-t">${msg("tnProof3")}</span>${msg("tnProof3Text")}</li>
+    <li><span class="tn-proof-t">${msg("tnProof4")}</span>${msg("tnProof4Text")}</li>
   </ul>
   </#if>
 </div>

@@ -268,23 +268,38 @@ The theme implements the Teknoir design standard with:
   - Horizon Yellow: `#E0AD1B` (warnings)
   - Pale Tree Purple: `#9B357D`
 - **Logo**: Teknoir full logo with trademark
-- **Dark Theme**: True-black instrument-panel surface, neon horizon and the
-  brand's four chevron colors; dark only, regardless of the OS setting
+- **Dark Theme**: the showcase palette (#101010 page, #171717 panels, glow and
+  grid behind the hero) and the brand's four chevron colors; dark only,
+  regardless of the OS setting
 - **No external assets**: fonts, logo and styles all ship under
   `login/resources/`, so the theme works on air-gapped installs
 
 ### Layout
 
-`template.ftl` is the landing shell: the console above the horizon, the fleet
-below it. Headline, lede and the three verbs share one baseline with the
-sign-in card, the sun rests on the horizon in the gap between them, and four
-sample robots stand on the neon floor as status glyphs (green online, amber
-degraded). One load sequence brings the horizon, floor, sun and robots in;
-after that the page is still. Proxima Nova carries every word except the
-command snippet and the robot labels, which use the system monospace stack.
-The `security-admin-console` client is excluded, and every
-other page (password, OTP, reset password, error, info, page expired, logout
-confirm, device code, registration, ...) gets the same branded centered card.
+`template.ftl` carries the hero of the platform showcase
+(`showcase/teknoir-platform.src.html` in the workspace): eyebrow, headline
+"Any robot. Any workload. Any way you work." and the sub on the left; on the
+right the three doors (Console, TeknoirBot, tnctl + MCP) whose rails meet in
+the Teknoir mark and run into the sign-in card, so sign-in reads as the one
+door to all three. The showcase's proof row sits underneath.
+
+- The OAuth client picks the lit door: `teknoir` (the console, via
+  oauth2-proxy) lights Console and titles the card "Sign in to the console";
+  `teknoir-cli` lights tnctl + MCP, titles it "Sign in to tnctl" and adds
+  "After you sign in, return to your terminal". Other clients (ArgoCD,
+  Harbor, ...) get no lit door and Keycloak's own title.
+- From 1240px wide the copy and the diagram sit side by side; below that the
+  diagram is one centred row under the headline; on phones the doors become
+  labels above rails that drop into the card, and the sub and proof row
+  follow the card.
+- The doors have a fixed pitch, so the rails meet their centres whatever the
+  card's height (errors, extra fields).
+- The flow dots run from the card out to the doors; `prefers-reduced-motion`
+  stops them.
+- The `security-admin-console` client and every other page (password, OTP,
+  reset password, error, info, page expired, logout confirm, device code,
+  registration, ...) get the same card, centred, without the landing copy.
+
 All landing copy lives in `messages/messages_en.properties`.
 
 ### File Structure
@@ -292,11 +307,11 @@ All landing copy lives in `messages/messages_en.properties`.
 | File | Purpose |
 |---|---|
 | `theme.properties` | Theme configuration: `parent=keycloak.v2`, dark palette, styles |
-| `template.ftl` | Landing shell (console + card above the horizon, fleet below) and card layout for every page |
+| `template.ftl` | Landing (showcase hero: doors, mark and rails into the sign-in card, proof row) and card layout for every page |
 | `messages/messages_en.properties` | All landing copy and login strings |
 | `resources/css/teknoir.css` | Complete theme styles: tokens, PatternFly remap, backdrop, layout |
 | `resources/fonts/` | Proxima Nova font files (woff, woff2) |
-| `resources/img/` | Teknoir logo (SVG) and favicon files |
+| `resources/img/` | Teknoir logo and mark (SVG) and favicon files |
 
 ---
 
